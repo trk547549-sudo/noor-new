@@ -1,4 +1,4 @@
-name: Build Noor APK
+name: Noor APK TEST
 
 on:
   workflow_dispatch:
