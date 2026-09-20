@@ -1,5 +1,3 @@
-cd ~/NoorNew
-cat > app/src/main/java/com/noornew/app/MainActivity.java <<'EOF'
 package com.noornew.app;
 
 import android.app.*;
@@ -290,4 +288,3 @@ public class MainActivity extends Activity {
         back();
     }
 }
-EOF
