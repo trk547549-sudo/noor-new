@@ -1,309 +1,293 @@
+cd ~/NoorNew
+cat > app/src/main/java/com/noornew/app/MainActivity.java <<'EOF'
 package com.noornew.app;
 
-import android.app.Activity;
-import android.os.Bundle;
+import android.app.*;
+import android.os.*;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.view.Gravity;
-import android.view.View;
-import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.ScrollView;
-import android.widget.TextView;
+import android.view.*;
+import android.widget.*;
+import java.util.*;
 
 public class MainActivity extends Activity {
 
-    LinearLayout layout;
-    int count = 0;
+    LinearLayout root, content;
+    int gold = Color.rgb(205,165,70);
+    int dark = Color.rgb(18,28,25);
+
+    String[] surahs = {
+        "الفاتحة","البقرة","آل عمران","النساء","المائدة","الأنعام","الأعراف",
+        "الأنفال","التوبة","يونس","هود","يوسف","الرعد","إبراهيم","الحجر",
+        "النحل","الإسراء","الكهف","مريم","طه","الأنبياء","الحج","المؤمنون",
+        "النور","الفرقان","الشعراء","النمل","القصص","العنكبوت","الروم",
+        "لقمان","السجدة","الأحزاب","سبأ","فاطر","يس","الصافات","ص","الزمر",
+        "غافر","فصلت","الشورى","الزخرف","الدخان","الجاثية","الأحقاف","محمد",
+        "الفتح","الحجرات","ق","الذاريات","الطور","النجم","القمر","الرحمن",
+        "الواقعة","الحديد","المجادلة","الحشر","الممتحنة","الصف","الجمعة",
+        "المنافقون","التغابن","الطلاق","التحريم","الملك","القلم","الحاقة",
+        "المعارج","نوح","الجن","المزمل","المدثر","القيامة","الإنسان","المرسلات",
+        "النبأ","النازعات","عبس","التكوير","الانفطار","المطففين","الانشقاق",
+        "البروج","الطارق","الأعلى","الغاشية","الفجر","البلد","الشمس","الليل",
+        "الضحى","الشرح","التين","العلق","القدر","البينة","الزلزلة","العاديات",
+        "القارعة","التكاثر","العصر","الهمزة","الفيل","قريش","الماعون","الكوثر",
+        "الكافرون","النصر","المسد","الإخلاص","الفلق","الناس"
+    };
 
     String[] adhkar = {
-        "سبحان الله",
-        "الحمد لله",
-        "الله أكبر",
-        "لا إله إلا الله",
-        "أستغفر الله",
-        "لا حول ولا قوة إلا بالله",
-        "سبحان الله وبحمده",
-        "سبحان الله العظيم",
-        "اللهم صل وسلم على نبينا محمد"
+        "سبحان الله","الحمد لله","الله أكبر","لا إله إلا الله",
+        "أستغفر الله","سبحان الله وبحمده","سبحان الله العظيم",
+        "لا حول ولا قوة إلا بالله","حسبي الله ونعم الوكيل",
+        "اللهم صل وسلم على نبينا محمد","رب اغفر لي","اللهم اهدني",
+        "اللهم ارزقني","اللهم احفظني","رب اشرح لي صدري",
+        "رب زدني علما","اللهم أعني على ذكرك وشكرك وحسن عبادتك"
+    };
+
+    String[] names = {
+        "الله","الرحمن","الرحيم","الملك","القدوس","السلام","المؤمن",
+        "المهيمن","العزيز","الجبار","المتكبر","الخالق","البارئ","المصور",
+        "الغفار","القهار","الوهاب","الرزاق","الفتاح","العليم","السميع",
+        "البصير","الحكم","العدل","اللطيف","الخبير","الحليم","العظيم",
+        "الغفور","الشكور","العلي","الكبير","الحفيظ","المقيت","الحسيب"
     };
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onCreate(Bundle b) {
+        super.onCreate(b);
         showHome();
     }
 
-    private ScrollView createPage() {
+    TextView title(String t, int size) {
+        TextView v = new TextView(this);
+        v.setText(t);
+        v.setTextColor(Color.WHITE);
+        v.setTextSize(size);
+        v.setTypeface(Typeface.DEFAULT, Typeface.BOLD);
+        v.setGravity(Gravity.CENTER);
+        v.setPadding(15,25,15,25);
+        return v;
+    }
+
+    Button btn(String text) {
+        Button b = new Button(this);
+        b.setText(text);
+        b.setTextSize(17);
+        b.setTextColor(Color.WHITE);
+        b.setAllCaps(false);
+        b.setBackgroundColor(Color.rgb(35,65,55));
+        LinearLayout.LayoutParams p =
+                new LinearLayout.LayoutParams(-1,65);
+        p.setMargins(12,7,12,7);
+        b.setLayoutParams(p);
+        return b;
+    }
+
+    void base(String head) {
+        root = new LinearLayout(this);
+        root.setOrientation(LinearLayout.VERTICAL);
+        root.setBackgroundColor(dark);
+
+        root.addView(title(head,25));
+
+        content = new LinearLayout(this);
+        content.setOrientation(LinearLayout.VERTICAL);
+        content.setPadding(10,5,10,15);
+
         ScrollView scroll = new ScrollView(this);
+        scroll.addView(content);
+        root.addView(scroll,new LinearLayout.LayoutParams(-1,0,1));
 
-        layout = new LinearLayout(this);
-        layout.setOrientation(LinearLayout.VERTICAL);
-        layout.setPadding(24, 24, 24, 30);
-        layout.setGravity(Gravity.CENTER_HORIZONTAL);
-        layout.setBackgroundColor(Color.rgb(247, 250, 248));
-
-        scroll.addView(layout);
-        return scroll;
+        setContentView(root);
     }
 
-    private TextView title(String text) {
-        TextView view = new TextView(this);
-        view.setText(text);
-        view.setTextSize(30);
-        view.setTextColor(Color.rgb(20, 105, 75));
-        view.setTypeface(Typeface.DEFAULT, Typeface.BOLD);
-        view.setGravity(Gravity.CENTER);
-        view.setPadding(10, 20, 10, 25);
-        return view;
+    void showHome() {
+        base("🌙 نور");
+
+        TextView welcome = title(
+            "موسوعة إسلامية\nالقرآن • الأذكار • الحديث • العبادة",20);
+        welcome.setTextColor(Color.rgb(235,205,120));
+        content.addView(welcome);
+
+        Button q = btn("📖 القرآن الكريم");
+        q.setOnClickListener(v -> showQuran());
+        content.addView(q);
+
+        Button a = btn("🤲 الأذكار والأدعية");
+        a.setOnClickListener(v -> showAdhkar());
+        content.addView(a);
+
+        Button h = btn("📜 الأحاديث");
+        h.setOnClickListener(v -> showHadith());
+        content.addView(h);
+
+        Button s = btn("📿 المسبحة");
+        s.setOnClickListener(v -> showTasbeeh());
+        content.addView(s);
+
+        Button n = btn("🌙 أسماء الله الحسنى");
+        n.setOnClickListener(v -> showNames());
+        content.addView(n);
+
+        Button p = btn("🕌 مواقيت الصلاة");
+        p.setOnClickListener(v -> showPrayer());
+        content.addView(p);
+
+        Button qib = btn("🧭 القبلة");
+        qib.setOnClickListener(v ->
+            Toast.makeText(this,"سيتم استخدام بوصلة الهاتف لتحديد الاتجاه",Toast.LENGTH_LONG).show());
+        content.addView(qib);
+
+        Button about = btn("ℹ️ حول نور");
+        about.setOnClickListener(v -> {
+            new AlertDialog.Builder(this)
+                .setTitle("نور")
+                .setMessage("تطبيق إسلامي\n\nمطور التطبيق:\nعلاء العمراني\nala alamrany")
+                .setPositiveButton("حسنًا",null).show();
+        });
+        content.addView(about);
     }
 
-    private TextView content(String text) {
-        TextView view = new TextView(this);
-        view.setText(text);
-        view.setTextSize(19);
-        view.setTextColor(Color.DKGRAY);
-        view.setGravity(Gravity.RIGHT);
-        view.setPadding(15, 15, 15, 15);
-        return view;
+    void back() {
+        Button b = btn("← الرئيسية");
+        b.setOnClickListener(v -> showHome());
+        content.addView(b);
     }
 
-    private Button menuButton(String text) {
-        Button button = new Button(this);
-        button.setText(text);
-        button.setTextSize(18);
+    void showQuran() {
+        base("📖 القرآن الكريم");
+        TextView info = title("سور القرآن الكريم",20);
+        info.setTextColor(Color.rgb(235,205,120));
+        content.addView(info);
 
-        LinearLayout.LayoutParams params =
-                new LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.MATCH_PARENT,
-                        LinearLayout.LayoutParams.WRAP_CONTENT);
-
-        params.setMargins(0, 6, 0, 6);
-        button.setLayoutParams(params);
-
-        return button;
+        for (int i=0;i<surahs.length;i++) {
+            final String name=surahs[i];
+            Button b=btn((i+1)+" - سورة "+name);
+            b.setOnClickListener(v -> showSurah(name));
+            content.addView(b);
+        }
+        back();
     }
 
-    private void addBack() {
-        Button button = menuButton("⬅️ الرئيسية");
-        button.setOnClickListener(v -> showHome());
-        layout.addView(button);
-    }
+    void showSurah(String name) {
+        base("📖 سورة "+name);
 
-    private void showHome() {
-
-        ScrollView scroll = createPage();
-
-        layout.addView(title("🌙 نور"));
-
-        TextView intro = content(
-                "تطبيق إسلامي\n\n" +
-                "📖 القرآن • 🤲 الأذكار • 📿 المسبحة\n" +
-                "📜 الأحاديث • 🕌 الصلاة • ✨ أسماء الله"
+        TextView t=new TextView(this);
+        t.setText(
+            "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ\n\n"+
+            "صفحة قراءة القرآن الكريم\n\n"+
+            "سيتم عرض نص السورة من بيانات القرآن الموثوقة داخل التطبيق."
         );
-        intro.setGravity(Gravity.CENTER);
-        layout.addView(intro);
+        t.setTextColor(Color.WHITE);
+        t.setTextSize(21);
+        t.setGravity(Gravity.CENTER);
+        t.setPadding(20,30,20,30);
+        content.addView(t);
 
-        Button quran = menuButton("📖 القرآن الكريم");
-        quran.setOnClickListener(v -> showQuran());
-        layout.addView(quran);
-
-        Button azkar = menuButton("🤲 الأذكار والأدعية");
-        azkar.setOnClickListener(v -> showAzkar());
-        layout.addView(azkar);
-
-        Button tasbeeh = menuButton("📿 المسبحة");
-        tasbeeh.setOnClickListener(v -> showTasbeeh());
-        layout.addView(tasbeeh);
-
-        Button hadith = menuButton("📜 الأحاديث");
-        hadith.setOnClickListener(v -> showHadith());
-        layout.addView(hadith);
-
-        Button prayer = menuButton("🕌 مواقيت الصلاة");
-        prayer.setOnClickListener(v -> showPrayer());
-        layout.addView(prayer);
-
-        Button names = menuButton("✨ أسماء الله الحسنى");
-        names.setOnClickListener(v -> showNames());
-        layout.addView(names);
-
-        layout.addView(content(
-                "\n👨‍💻 مطور التطبيق\n" +
-                "علاء العمراني\n" +
-                "ala alamrany"
-        ));
-
-        setContentView(scroll);
+        back();
     }
 
-    private void showQuran() {
+    void showAdhkar() {
+        base("🤲 الأذكار والأدعية");
 
-        ScrollView scroll = createPage();
-
-        layout.addView(title("📖 القرآن الكريم"));
-
-        layout.addView(content(
-                "سور القرآن الكريم\n\n" +
-                "1 الفاتحة\n2 البقرة\n3 آل عمران\n4 النساء\n" +
-                "5 المائدة\n6 الأنعام\n7 الأعراف\n8 الأنفال\n" +
-                "9 التوبة\n10 يونس\n11 هود\n12 يوسف\n" +
-                "13 الرعد\n14 إبراهيم\n15 الحجر\n16 النحل\n" +
-                "17 الإسراء\n18 الكهف\n19 مريم\n20 طه\n" +
-                "21 الأنبياء\n22 الحج\n23 المؤمنون\n24 النور\n" +
-                "25 الفرقان\n26 الشعراء\n27 النمل\n28 القصص\n" +
-                "29 العنكبوت\n30 الروم\n31 لقمان\n32 السجدة\n" +
-                "33 الأحزاب\n34 سبأ\n35 فاطر\n36 يس\n" +
-                "37 الصافات\n38 ص\n39 الزمر\n40 غافر\n" +
-                "41 فصلت\n42 الشورى\n43 الزخرف\n44 الدخان\n" +
-                "45 الجاثية\n46 الأحقاف\n47 محمد\n48 الفتح\n" +
-                "49 الحجرات\n50 ق\n51 الذاريات\n52 الطور\n" +
-                "53 النجم\n54 القمر\n55 الرحمن\n56 الواقعة\n" +
-                "57 الحديد\n58 المجادلة\n59 الحشر\n60 الممتحنة\n" +
-                "61 الصف\n62 الجمعة\n63 المنافقون\n64 التغابن\n" +
-                "65 الطلاق\n66 التحريم\n67 الملك\n68 القلم\n" +
-                "69 الحاقة\n70 المعارج\n71 نوح\n72 الجن\n" +
-                "73 المزمل\n74 المدثر\n75 القيامة\n76 الإنسان\n" +
-                "77 المرسلات\n78 النبأ\n79 النازعات\n80 عبس\n" +
-                "81 التكوير\n82 الانفطار\n83 المطففين\n84 الانشقاق\n" +
-                "85 البروج\n86 الطارق\n87 الأعلى\n88 الغاشية\n" +
-                "89 الفجر\n90 البلد\n91 الشمس\n92 الليل\n93 الضحى\n" +
-                "94 الشرح\n95 التين\n96 العلق\n97 القدر\n" +
-                "98 البينة\n99 الزلزلة\n100 العاديات\n101 القارعة\n" +
-                "102 التكاثر\n103 العصر\n104 الهمزة\n105 الفيل\n" +
-                "106 قريش\n107 الماعون\n108 الكوثر\n109 الكافرون\n" +
-                "110 النصر\n111 المسد\n112 الإخلاص\n113 الفلق\n114 الناس\n\n" +
-
-                "سورة الفاتحة\n\n" +
-                "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ\n\n" +
-                "الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ\n\n" +
-                "الرَّحْمَٰنِ الرَّحِيمِ\n\n" +
-                "مَالِكِ يَوْمِ الدِّينِ\n\n" +
-                "إِيَّاكَ نَعْبُدُ وَإِيَّاكَ نَسْتَعِينُ\n\n" +
-                "اهْدِنَا الصِّرَاطَ الْمُسْتَقِيمَ"
-        ));
-
-        addBack();
-        setContentView(scroll);
-    }
-
-    private void showAzkar() {
-
-        ScrollView scroll = createPage();
-
-        layout.addView(title("🤲 الأذكار والأدعية"));
-
-        layout.addView(content(
-                "🌅 أذكار الصباح والمساء\n\n" +
-                "سبحان الله وبحمده.\n\n" +
-                "أستغفر الله وأتوب إليه.\n\n" +
-                "لا إله إلا الله وحده لا شريك له، له الملك وله الحمد وهو على كل شيء قدير.\n\n" +
-                "أعوذ بكلمات الله التامات من شر ما خلق.\n\n" +
-                "رضيت بالله ربًا وبالإسلام دينًا وبمحمد ﷺ نبيًا.\n\n" +
-                "لا حول ولا قوة إلا بالله.\n\n" +
-                "سبحان الله العظيم.\n\n" +
-                "اللهم صل وسلم على نبينا محمد.\n\n" +
-                "🤲 أدعية\n\n" +
-                "ربنا آتنا في الدنيا حسنة وفي الآخرة حسنة وقنا عذاب النار.\n\n" +
-                "رب اشرح لي صدري ويسر لي أمري.\n\n" +
-                "رب زدني علمًا.\n\n" +
-                "اللهم اغفر لي وارحمني واهدني وعافني وارزقني."
-        ));
-
-        addBack();
-        setContentView(scroll);
-    }
-
-    private void showTasbeeh() {
-
-        ScrollView scroll = createPage();
-
-        layout.addView(title("📿 المسبحة"));
-
-        TextView counter = content("العدد: " + count);
-        counter.setTextSize(32);
-        counter.setGravity(Gravity.CENTER);
-        layout.addView(counter);
-
-        for (String dhikr : adhkar) {
-            Button b = menuButton("📿 " + dhikr);
-
-            b.setOnClickListener(v -> {
-                count++;
-                counter.setText("العدد: " + count);
-            });
-
-            layout.addView(b);
+        for(String x:adhkar) {
+            TextView t=new TextView(this);
+            t.setText("✦ "+x);
+            t.setTextColor(Color.WHITE);
+            t.setTextSize(20);
+            t.setPadding(15,18,15,18);
+            content.addView(t);
         }
 
-        Button reset = menuButton("🔄 تصفير");
-        reset.setOnClickListener(v -> {
-            count = 0;
-            counter.setText("العدد: 0");
+        back();
+    }
+
+    void showHadith() {
+        base("📜 الأحاديث");
+
+        String[] hs={
+            "إنما الأعمال بالنيات — رواه البخاري ومسلم",
+            "من لا يرحم لا يُرحم — رواه البخاري ومسلم",
+            "المسلم من سلم المسلمون من لسانه ويده — رواه البخاري ومسلم",
+            "يسروا ولا تعسروا وبشروا ولا تنفروا — رواه البخاري ومسلم",
+            "الدين النصيحة — رواه مسلم"
+        };
+
+        for(String x:hs) {
+            TextView t=new TextView(this);
+            t.setText("📜 "+x);
+            t.setTextColor(Color.WHITE);
+            t.setTextSize(19);
+            t.setPadding(15,20,15,20);
+            content.addView(t);
+        }
+
+        back();
+    }
+
+    void showTasbeeh() {
+        base("📿 المسبحة");
+
+        final TextView count=new TextView(this);
+        count.setText("0");
+        count.setTextColor(Color.rgb(235,205,120));
+        count.setTextSize(55);
+        count.setGravity(Gravity.CENTER);
+        content.addView(count);
+
+        Button plus=btn("📿 تسبيح");
+        content.addView(plus);
+
+        Button reset=btn("إعادة العداد");
+        content.addView(reset);
+
+        final int[] n={0};
+
+        plus.setOnClickListener(v -> {
+            n[0]++;
+            count.setText(String.valueOf(n[0]));
         });
 
-        layout.addView(reset);
+        reset.setOnClickListener(v -> {
+            n[0]=0;
+            count.setText("0");
+        });
 
-        addBack();
-        setContentView(scroll);
+        back();
     }
 
-    private void showHadith() {
+    void showNames() {
+        base("🌙 أسماء الله الحسنى");
 
-        ScrollView scroll = createPage();
+        for(String x:names) {
+            TextView t=new TextView(this);
+            t.setText("﴿ "+x+" ﴾");
+            t.setTextColor(Color.WHITE);
+            t.setTextSize(21);
+            t.setGravity(Gravity.CENTER);
+            t.setPadding(10,12,10,12);
+            content.addView(t);
+        }
 
-        layout.addView(title("📜 الأحاديث"));
-
-        layout.addView(content(
-                "أحاديث نبوية مختارة\n\n" +
-                "إنما الأعمال بالنيات — رواه البخاري ومسلم.\n\n" +
-                "من لا يرحم لا يُرحم — رواه البخاري ومسلم.\n\n" +
-                "المسلم من سلم المسلمون من لسانه ويده — رواه البخاري ومسلم.\n\n" +
-                "خيركم من تعلم القرآن وعلمه — رواه البخاري.\n\n" +
-                "الكلمة الطيبة صدقة — رواه البخاري ومسلم."
-        ));
-
-        addBack();
-        setContentView(scroll);
+        back();
     }
 
-    private void showPrayer() {
+    void showPrayer() {
+        base("🕌 مواقيت الصلاة");
 
-        ScrollView scroll = createPage();
+        String[] p={
+            "الفجر","الشروق","الظهر","العصر","المغرب","العشاء"
+        };
 
-        layout.addView(title("🕌 مواقيت الصلاة"));
+        for(String x:p) {
+            TextView t=new TextView(this);
+            t.setText("🕌 "+x+"   —   يُحسب حسب المدينة والتاريخ");
+            t.setTextColor(Color.WHITE);
+            t.setTextSize(18);
+            t.setPadding(15,18,15,18);
+            content.addView(t);
+        }
 
-        layout.addView(content(
-                "الصلوات الخمس\n\n" +
-                "🌅 الفجر\n\n" +
-                "☀️ الشروق\n\n" +
-                "🕌 الظهر\n\n" +
-                "🌤️ العصر\n\n" +
-                "🌇 المغرب\n\n" +
-                "🌙 العشاء\n\n" +
-                "مواقيت الصلاة تختلف حسب المدينة والتاريخ، " +
-                "ولذلك لا أضع أوقاتًا ثابتة قد تكون خاطئة."
-        ));
-
-        addBack();
-        setContentView(scroll);
-    }
-
-    private void showNames() {
-
-        ScrollView scroll = createPage();
-
-        layout.addView(title("✨ أسماء الله الحسنى"));
-
-        layout.addView(content(
-                "الله\nالرحمن\nالرحيم\nالملك\nالقدوس\nالسلام\n" +
-                "المؤمن\nالمهيمن\nالعزيز\nالجبار\nالمتكبر\n" +
-                "الخالق\nالبارئ\nالمصور\nالغفار\nالوهاب\n" +
-                "الرزاق\nالفتاح\nالعليم\nالسميع\nالبصير\n" +
-                "الغفور\nالشكور\nالحليم\nالعظيم"
-        ));
-
-        addBack();
-        setContentView(scroll);
+        back();
     }
 }
+EOF
