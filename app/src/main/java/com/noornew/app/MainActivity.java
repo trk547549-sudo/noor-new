@@ -7,6 +7,7 @@ import android.graphics.Typeface;
 import android.view.*;
 import android.widget.*;
 import java.util.*;
+import java.io.*;
 
 public class MainActivity extends Activity {
 
@@ -167,20 +168,43 @@ public class MainActivity extends Activity {
     }
 
     void showSurah(String name) {
-        base("📖 سورة "+name);
+        base("📖 سورة " + name);
 
-        TextView t=new TextView(this);
-        t.setText(
-            "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ\n\n"+
-            "صفحة قراءة القرآن الكريم\n\n"+
-            "سيتم عرض نص السورة من بيانات القرآن الموثوقة داخل التطبيق."
-        );
+        TextView t = new TextView(this);
         t.setTextColor(Color.WHITE);
-        t.setTextSize(21);
-        t.setGravity(Gravity.CENTER);
-        t.setPadding(20,30,20,30);
-        content.addView(t);
+        t.setTextSize(20);
+        t.setGravity(Gravity.RIGHT);
+        t.setPadding(20, 20, 20, 20);
 
+        StringBuilder text = new StringBuilder();
+
+        try {
+            int number = Arrays.asList(surahs).indexOf(name) + 1;
+            BufferedReader r = new BufferedReader(
+                new InputStreamReader(
+                    getAssets().open("quran-simple.txt"), "UTF-8"
+                )
+            );
+
+            String line;
+            while ((line = r.readLine()) != null) {
+                if (line.startsWith(number + "|")) {
+                    String[] parts = line.split("\\|", 3);
+                    if (parts.length == 3) {
+                        text.append(parts[1])
+                            .append(" — ")
+                            .append(parts[2])
+                            .append("\n\n");
+                    }
+                }
+            }
+            r.close();
+        } catch (Exception e) {
+            text.append("حدث خطأ أثناء قراءة القرآن.");
+        }
+
+        t.setText(text.toString());
+        content.addView(t);
         back();
     }
 
