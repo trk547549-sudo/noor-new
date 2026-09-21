@@ -248,6 +248,12 @@ public class MainActivity extends Activity {
         content.addView(t);
     }
 
+    void back() {
+        Button b = btn("⬅️ العودة للرئيسية");
+        b.setOnClickListener(v -> showHome());
+        content.addView(b);
+    }
+
     void showQuran() {
         base("القرآن الكريم");
         TextView info = title("سور القرآن الكريم",20);
