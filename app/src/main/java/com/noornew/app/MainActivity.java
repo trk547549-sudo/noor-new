@@ -71,12 +71,15 @@ public class MainActivity extends Activity {
         Button b = new Button(this);
         b.setText(text);
         b.setTextSize(17);
+        b.setGravity(Gravity.CENTER);
+        b.setMinHeight(0);
+        b.setIncludeFontPadding(true);
         b.setTextColor(Color.WHITE);
         b.setAllCaps(false);
         b.setBackgroundColor(Color.rgb(35,65,55));
         LinearLayout.LayoutParams p =
-                new LinearLayout.LayoutParams(-1,65);
-        p.setMargins(12,7,12,7);
+                new LinearLayout.LayoutParams(-1,58);
+        p.setMargins(12,8,12,8);
         b.setLayoutParams(p);
         return b;
     }
@@ -100,38 +103,38 @@ public class MainActivity extends Activity {
     }
 
     void showHome() {
-        base("🌙 نور");
+        base("نور");
 
         TextView welcome = title(
             "موسوعة إسلامية\nالقرآن • الأذكار • الحديث • العبادة",20);
         welcome.setTextColor(Color.rgb(235,205,120));
         content.addView(welcome);
 
-        Button q = btn("📖 القرآن الكريم");
+        Button q = btn("القرآن الكريم");
         q.setOnClickListener(v -> showQuran());
         content.addView(q);
 
-        Button a = btn("🤲 الأذكار والأدعية");
+        Button a = btn("الأذكار والأدعية");
         a.setOnClickListener(v -> showAdhkar());
         content.addView(a);
 
-        Button h = btn("📜 الأحاديث");
+        Button h = btn("الأحاديث");
         h.setOnClickListener(v -> showHadith());
         content.addView(h);
 
-        Button s = btn("📿 المسبحة");
+        Button s = btn("المسبحة");
         s.setOnClickListener(v -> showTasbeeh());
         content.addView(s);
 
-        Button n = btn("🌙 أسماء الله الحسنى");
+        Button n = btn("أسماء الله الحسنى");
         n.setOnClickListener(v -> showNames());
         content.addView(n);
 
-        Button p = btn("🕌 مواقيت الصلاة");
+        Button p = btn("مواقيت الصلاة");
         p.setOnClickListener(v -> showPrayer());
         content.addView(p);
 
-        Button qib = btn("🧭 القبلة");
+        Button qib = btn("القبلة");
         qib.setOnClickListener(v ->
             Toast.makeText(this,"سيتم استخدام بوصلة الهاتف لتحديد الاتجاه",Toast.LENGTH_LONG).show());
         content.addView(qib);
@@ -153,7 +156,7 @@ public class MainActivity extends Activity {
     }
 
     void showQuran() {
-        base("📖 القرآن الكريم");
+        base("القرآن الكريم");
         TextView info = title("سور القرآن الكريم",20);
         info.setTextColor(Color.rgb(235,205,120));
         content.addView(info);
@@ -224,7 +227,7 @@ public class MainActivity extends Activity {
     }
 
     void showHadith() {
-        base("📜 الأحاديث");
+        base("الأحاديث");
 
         String[] hs={
             "إنما الأعمال بالنيات — رواه البخاري ومسلم",
@@ -247,7 +250,7 @@ public class MainActivity extends Activity {
     }
 
     void showTasbeeh() {
-        base("📿 المسبحة");
+        base("المسبحة");
 
         final TextView count=new TextView(this);
         count.setText("0");
@@ -278,7 +281,7 @@ public class MainActivity extends Activity {
     }
 
     void showNames() {
-        base("🌙 أسماء الله الحسنى");
+        base("أسماء الله الحسنى");
 
         for(String x:names) {
             TextView t=new TextView(this);
@@ -294,7 +297,7 @@ public class MainActivity extends Activity {
     }
 
     void showPrayer() {
-        base("🕌 مواقيت الصلاة");
+        base("مواقيت الصلاة");
 
         String[] p={
             "الفجر","الشروق","الظهر","العصر","المغرب","العشاء"
