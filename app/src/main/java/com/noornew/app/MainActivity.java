@@ -71,15 +71,21 @@ public class MainActivity extends Activity {
         Button b = new Button(this);
         b.setText(text);
         b.setTextSize(17);
-        b.setGravity(Gravity.CENTER);
-        b.setMinHeight(0);
-        b.setIncludeFontPadding(true);
         b.setTextColor(Color.WHITE);
         b.setAllCaps(false);
+        b.setGravity(Gravity.CENTER);
+        b.setTextDirection(View.TEXT_DIRECTION_RTL);
+        b.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+        b.setSingleLine(false);
+        b.setMaxLines(2);
+        b.setMinHeight(64);
+        b.setIncludeFontPadding(true);
+        b.setPadding(16,12,16,12);
         b.setBackgroundColor(Color.rgb(35,65,55));
+
         LinearLayout.LayoutParams p =
-                new LinearLayout.LayoutParams(-1,58);
-        p.setMargins(12,8,12,8);
+                new LinearLayout.LayoutParams(-1,-2);
+        p.setMargins(12,6,12,6);
         b.setLayoutParams(p);
         return b;
     }
