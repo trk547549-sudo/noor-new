@@ -242,8 +242,7 @@ public class MainActivity extends Activity {
         content.addView(info);
 
         TextView darkMode = new TextView(this);
-        darkMode.setText("🌙 الوضع الليلي
-المظهر الداكن مفعل");
+        darkMode.setText("🌙 الوضع الليلي\nالمظهر الداكن مفعل");
         darkMode.setTextColor(Color.WHITE);
         darkMode.setTextSize(18);
         darkMode.setGravity(Gravity.RIGHT);
