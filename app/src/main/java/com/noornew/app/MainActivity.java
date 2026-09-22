@@ -233,6 +233,34 @@ public class MainActivity extends Activity {
         addRow(settings,about);
     }
 
+    void showSettings() {
+        currentPage = "settings";
+        base("⚙️ الإعدادات");
+
+        TextView info = title("إعدادات تطبيق نور", 20);
+        info.setTextColor(Color.WHITE);
+        content.addView(info);
+
+        TextView darkMode = new TextView(this);
+        darkMode.setText("🌙 الوضع الليلي
+المظهر الداكن مفعل");
+        darkMode.setTextColor(Color.WHITE);
+        darkMode.setTextSize(18);
+        darkMode.setGravity(Gravity.RIGHT);
+        darkMode.setPadding(20, 25, 20, 25);
+        darkMode.setBackground(cardBackground(Color.rgb(15,27,31), gold, 18));
+        content.addView(darkMode);
+
+        TextView about = new TextView(this);
+        about.setText("ℹ️ حول نور\n\nمطور التطبيق: علاء العمراني\nala alamrany");
+        about.setTextColor(Color.WHITE);
+        about.setTextSize(17);
+        about.setGravity(Gravity.RIGHT);
+        about.setPadding(20, 25, 20, 25);
+        about.setBackground(cardBackground(Color.rgb(15,27,31), gold, 18));
+        content.addView(about);
+    }
+
     void addRow(Button left, Button right) {
         LinearLayout row = new LinearLayout(this);
         row.setOrientation(LinearLayout.HORIZONTAL);
