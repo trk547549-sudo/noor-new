@@ -189,8 +189,7 @@ public class MainActivity extends Activity {
         addRow(hadith,seerah);
 
         Button prophets = btn("📚\nقصص الأنبياء");
-        prophets.setOnClickListener(v ->
-            Toast.makeText(this,"قصص الأنبياء قيد التطوير",Toast.LENGTH_SHORT).show());
+        prophets.setOnClickListener(v -> showProphets());
 
         Button hijri = btn("📅\nالتاريخ الهجري");
         hijri.setOnClickListener(v ->
@@ -338,69 +337,174 @@ public class MainActivity extends Activity {
     }
 
     void showHadith() {
-        base("الأحاديث");
+        currentPage = "hadith";
+        base("📜 الأحاديث النبوية");
 
-        String[] hs={
-            "إنما الأعمال بالنيات — رواه البخاري ومسلم",
-            "من لا يرحم لا يُرحم — رواه البخاري ومسلم",
-            "المسلم من سلم المسلمون من لسانه ويده — رواه البخاري ومسلم",
-            "يسروا ولا تعسروا وبشروا ولا تنفروا — رواه البخاري ومسلم",
-            "الدين النصيحة — رواه مسلم"
+        String[][] hs = {
+            {"إنما الأعمال بالنيات، وإنما لكل امرئ ما نوى",
+             "صحيح البخاري 1"},
+            {"من لا يرحم لا يُرحم",
+             "صحيح البخاري 5997"},
+            {"المسلم من سلم المسلمون من لسانه ويده",
+             "صحيح البخاري 10"},
+            {"لا يؤمن أحدكم حتى يحب لأخيه ما يحب لنفسه",
+             "صحيح البخاري 13"},
+            {"يسروا ولا تعسروا، وبشروا ولا تنفروا",
+             "صحيح البخاري 69"},
+            {"الدين النصيحة",
+             "صحيح مسلم 55a"},
+            {"خيركم من تعلم القرآن وعلمه",
+             "صحيح البخاري 5027"}
         };
 
-        for(String x:hs) {
-            TextView t=new TextView(this);
-            t.setText("📜 "+x);
-            t.setTextColor(Color.WHITE);
-            t.setTextSize(19);
-            t.setPadding(15,20,15,20);
-            content.addView(t);
-        }
+        for (String[] h : hs) {
+            TextView card = new TextView(this);
+            card.setText("📜  " + h[0] + "\n\n📚 " + h[1]);
+            card.setTextColor(Color.WHITE);
+            card.setTextSize(18);
+            card.setGravity(Gravity.RIGHT);
+            card.setPadding(20,22,20,22);
+            card.setBackground(
+                cardBackground(Color.rgb(15,27,31),gold,18)
+            );
 
+            LinearLayout.LayoutParams lp =
+                new LinearLayout.LayoutParams(-1,-2);
+            lp.setMargins(5,7,5,7);
+            card.setLayoutParams(lp);
+
+            content.addView(card);
+        }
     }
 
-    void showSettings() {
-        currentPage = "settings";
-        base("⚙️ الإعدادات");
+    void showProphets() {
+        currentPage = "prophets";
+        base("📚 قصص الأنبياء");
 
-        TextView t = title("📖 حجم خط القرآن",20);
-        t.setTextColor(gold);
-        content.addView(t);
+        TextView intro = title(
+            "قصص مختصرة مستندة إلى ما ورد في القرآن الكريم",
+            18
+        );
+        intro.setTextColor(gold);
+        intro.setGravity(Gravity.CENTER);
+        content.addView(intro);
 
-        TextView preview = new TextView(this);
-        preview.setText("بِسْمِ اللَّهِ الرَّحْمَـٰنِ الرَّحِيمِ");
-        preview.setTextColor(Color.WHITE);
-        preview.setTextSize(24);
-        preview.setGravity(Gravity.CENTER);
-        preview.setPadding(15,25,15,25);
-        content.addView(preview);
+        String[][] stories = {
+            {"آدم عليه السلام",
+             "خلق الله آدم وأسجد له الملائكة، ثم تاب عليه بعد توبته.",
+             "البقرة 30-37 • طه 115-123"},
 
-        SeekBar size = new SeekBar(this);
-        size.setMax(30);
-        size.setProgress(12);
-        content.addView(size);
+            {"نوح عليه السلام",
+             "دعا قومه إلى عبادة الله، وصنع السفينة بأمر الله، فنجاه الله ومن معه من المؤمنين.",
+             "هود 25-49 • نوح 1-28"},
 
-        size.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            public void onProgressChanged(SeekBar b,int p,boolean f) {
-                preview.setTextSize(12 + p);
-            }
-            public void onStartTrackingTouch(SeekBar b) {}
-            public void onStopTrackingTouch(SeekBar b) {}
-        });
+            {"هود عليه السلام",
+             "دعا قوم عاد إلى توحيد الله وترك الشرك، فكذبوه فنجى الله هودًا والذين آمنوا معه.",
+             "الأعراف 65-72 • هود 50-60"},
 
-        Button plus = btn("＋ تكبير الخط");
-        Button minus = btn("－ تصغير الخط");
-        addRow(plus,minus);
+            {"صالح عليه السلام",
+             "دعا ثمود إلى عبادة الله، وجعل الله لهم الناقة آية، فكذبوا وعقروا الناقة.",
+             "الأعراف 73-79 • هود 61-68"},
 
-        plus.setOnClickListener(v -> {
-            float x=preview.getTextSize()/getResources().getDisplayMetrics().scaledDensity;
-            preview.setTextSize(x+2);
-        });
+            {"إبراهيم عليه السلام",
+             "دعا قومه إلى التوحيد، واحتج عليهم في أمر الأصنام، وجعل الله النار عليه بردًا وسلامًا.",
+             "الأنبياء 51-70"},
 
-        minus.setOnClickListener(v -> {
-            float x=preview.getTextSize()/getResources().getDisplayMetrics().scaledDensity;
-            if(x>12) preview.setTextSize(x-2);
-        });
+            {"لوط عليه السلام",
+             "دعا قومه إلى ترك الفواحش والعودة إلى طاعة الله، فنجاه الله وأهلك المكذبين.",
+             "هود 77-83 • العنكبوت 28-35"},
+
+            {"إسماعيل عليه السلام",
+             "وصفه الله بالصبر وصدق الوعد، وذكره مع أهل بيته في عبادتهم لله.",
+             "مريم 54-55 • البقرة 125-129"},
+
+            {"إسحاق عليه السلام",
+             "بشر الله إبراهيم وسارة بإسحاق، وذكره من الصالحين المباركين.",
+             "هود 71-73 • الصافات 112-113"},
+
+            {"يعقوب عليه السلام",
+             "ابتلي بفقد يوسف فصبر، وأوصى أبناءه بالتوحيد، ثم جمع الله بينه وبين يوسف.",
+             "يوسف 18 • يوسف 83-101"},
+
+            {"يوسف عليه السلام",
+             "رأى رؤيا، ومر بابتلاءات متعددة، ثم مكن الله له في الأرض وجمعه بأهله.",
+             "سورة يوسف 1-101"},
+
+            {"شعيب عليه السلام",
+             "دعا قومه إلى عبادة الله وإيفاء الكيل والميزان وعدم الفساد في الأرض.",
+             "الأعراف 85-93 • هود 84-95"},
+
+            {"أيوب عليه السلام",
+             "ابتلاه الله فصبر، ودعا ربه، فكشف الله عنه الضر ورد عليه نعمته.",
+             "الأنبياء 83-84 • ص 41-44"},
+
+            {"موسى عليه السلام",
+             "أرسله الله إلى فرعون، وأيده بآياته، ونجى به بني إسرائيل من فرعون.",
+             "طه 9-79 • الشعراء 10-68"},
+
+            {"هارون عليه السلام",
+             "كان أخا موسى وسانده في دعوة فرعون، ودعا بني إسرائيل إلى طاعة الله.",
+             "طه 29-36 • طه 90-94"},
+
+            {"داود عليه السلام",
+             "آتاه الله الملك والحكمة، وأنزل عليه الزبور، وذكره بالصبر والعبادة.",
+             "ص 17-26 • النساء 163"},
+
+            {"سليمان عليه السلام",
+             "آتاه الله الملك والحكمة، وسخر له من خلقه، وذكر القرآن قصته مع ملكة سبأ.",
+             "النمل 15-44 • ص 30-40"},
+
+            {"إلياس عليه السلام",
+             "دعا قومه إلى عبادة الله وترك عبادة بعل.",
+             "الصافات 123-132"},
+
+            {"اليسع عليه السلام",
+             "ذكره الله مع عدد من الأنبياء ووصفه من الأخيار.",
+             "الأنعام 86 • ص 48"},
+
+            {"يونس عليه السلام",
+             "دعا ربه وهو في شدة، فاستجاب الله له ونجاه من الغم.",
+             "الأنبياء 87-88 • الصافات 139-148"},
+
+            {"زكريا عليه السلام",
+             "دعا ربه سرًا، فبشره الله بيحيى.",
+             "مريم 2-15 • آل عمران 37-41"},
+
+            {"يحيى عليه السلام",
+             "آتاه الله الحكم صبيًا، ووصفه بالبر والتقوى والصلاح.",
+             "مريم 12-15 • آل عمران 39"},
+
+            {"عيسى عليه السلام",
+             "ولد من مريم بمعجزة، وأيده الله بالآيات، ودعا بني إسرائيل إلى عبادة الله.",
+             "آل عمران 45-55 • مريم 16-36"},
+
+            {"محمد ﷺ",
+             "خاتم النبيين، أرسله الله بالهدى ودين الحق، وبلغ الرسالة ودعا إلى عبادة الله.",
+             "الأحزاب 40 • الفتح 29 • الأنبياء 107"}
+        };
+
+        for (String[] story : stories) {
+            TextView card = new TextView(this);
+            card.setText(
+                "🌙  " + story[0] +
+                "\n\n" + story[1] +
+                "\n\n📖 " + story[2]
+            );
+            card.setTextColor(Color.WHITE);
+            card.setTextSize(17);
+            card.setGravity(Gravity.RIGHT);
+            card.setPadding(20,22,20,22);
+            card.setBackground(
+                cardBackground(Color.rgb(15,27,31),gold,18)
+            );
+
+            LinearLayout.LayoutParams lp =
+                new LinearLayout.LayoutParams(-1,-2);
+            lp.setMargins(5,7,5,7);
+            card.setLayoutParams(lp);
+
+            content.addView(card);
+        }
     }
 
     void showTasbeeh() {
