@@ -9,6 +9,8 @@ import android.view.*;
 import android.widget.*;
 import java.util.*;
 import java.io.*;
+import java.net.*;
+import org.json.*;
 
 public class MainActivity extends Activity {
 
@@ -447,11 +449,83 @@ public class MainActivity extends Activity {
     }
 
     void showPrayer() {
-        base("مواقيت الصلاة");
+        currentPage = "prayer";
+        base("🕌 مواقيت الصلاة - صنعاء");
 
-        String[] p={
-            "الفجر","الشروق","الظهر","العصر","المغرب","العشاء"
-        };
+        TextView loading = title("جاري تحميل مواقيت الصلاة...",18);
+        loading.setTextColor(Color.WHITE);
+        content.addView(loading);
+
+        new Thread(() -> {
+            try {
+                java.text.SimpleDateFormat f =
+                    new java.text.SimpleDateFormat("dd-MM-yyyy", java.util.Locale.US);
+                String date = f.format(new java.util.Date());
+
+                URL url = new URL(
+                    "https://api.aladhan.com/v1/timingsByCity/" +
+                    date + "?city=Sanaa&country=Yemen");
+
+                HttpURLConnection c = (HttpURLConnection) url.openConnection();
+                c.setRequestMethod("GET");
+                c.setConnectTimeout(10000);
+                c.setReadTimeout(10000);
+
+                BufferedReader r = new BufferedReader(
+                    new InputStreamReader(c.getInputStream()));
+                StringBuilder b = new StringBuilder();
+                String line;
+                while ((line = r.readLine()) != null) b.append(line);
+                r.close();
+
+                JSONObject rootJson = new JSONObject(b.toString());
+                JSONObject timings =
+                    rootJson.getJSONObject("data").getJSONObject("timings");
+
+                String[] names = {
+                    "الفجر","الشروق","الظهر","العصر","المغرب","العشاء"
+                };
+                String[] keys = {
+                    "Fajr","Sunrise","Dhuhr","Asr","Maghrib","Isha"
+                };
+
+                runOnUiThread(() -> {
+                    content.removeAllViews();
+
+                    for (int i=0;i<names.length;i++) {
+                        TextView t = new TextView(this);
+                        try {
+                            t.setText("🕌  " + names[i] + "   —   " +
+                                      timings.getString(keys[i]));
+                        } catch(Exception e) {
+                            t.setText(names[i]);
+                        }
+                        t.setTextColor(Color.WHITE);
+                        t.setTextSize(20);
+                        t.setGravity(Gravity.CENTER);
+                        t.setPadding(15,20,15,20);
+                        t.setBackground(
+                            cardBackground(Color.rgb(15,27,31),gold,18));
+                        content.addView(t);
+
+                        LinearLayout.LayoutParams lp =
+                            new LinearLayout.LayoutParams(-1,-2);
+                        lp.setMargins(5,5,5,5);
+                        t.setLayoutParams(lp);
+                    }
+
+                    TextView info = title("📍 صنعاء - اليمن",16);
+                    info.setTextColor(Color.LTGRAY);
+                    content.addView(info);
+                });
+
+            } catch(Exception e) {
+                runOnUiThread(() ->
+                    loading.setText("تعذر تحميل المواقيت. تحقق من اتصال الإنترنت."));
+            }
+        }).start();
+    }
+;
 
         for(String x:p) {
             TextView t=new TextView(this);
