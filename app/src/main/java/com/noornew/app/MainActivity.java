@@ -525,16 +525,3 @@ public class MainActivity extends Activity {
             }
         }).start();
     }
-;
-
-        for(String x:p) {
-            TextView t=new TextView(this);
-            t.setText("🕌 "+x+"   —   يُحسب حسب المدينة والتاريخ");
-            t.setTextColor(Color.WHITE);
-            t.setTextSize(18);
-            t.setPadding(15,18,15,18);
-            content.addView(t);
-        }
-
-    }
-}
