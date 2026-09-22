@@ -15,6 +15,7 @@ public class MainActivity extends Activity {
     LinearLayout root, content;
     int gold = Color.rgb(205,165,70);
     int dark = Color.rgb(18,28,25);
+    String currentPage = "home";
 
     String[] surahs = {
         "الفاتحة","البقرة","آل عمران","النساء","المائدة","الأنعام","الأعراف",
@@ -218,8 +219,7 @@ public class MainActivity extends Activity {
         section("⚙️  التطبيق");
 
         Button settings = btn("⚙️\nالإعدادات");
-        settings.setOnClickListener(v ->
-            Toast.makeText(this,"الإعدادات قيد التطوير",Toast.LENGTH_SHORT).show());
+        settings.setOnClickListener(v -> showSettings());
 
         Button about = btn("ℹ️\nحول نور");
         about.setOnClickListener(v ->
@@ -258,7 +258,15 @@ public class MainActivity extends Activity {
         content.addView(t);
     }
 
+    @Override
+    public void onBackPressed() {
+        if (currentPage.equals("surah")) showQuran();
+        else if (currentPage.equals("quran")) showHome();
+        else showHome();
+    }
+
     void showQuran() {
+        currentPage = "quran";
         base("القرآن الكريم");
         TextView info = title("سور القرآن الكريم",20);
         info.setTextColor(Color.rgb(235,205,120));
@@ -273,6 +281,7 @@ public class MainActivity extends Activity {
     }
 
     void showSurah(String name) {
+        currentPage = "surah";
         base("📖 سورة " + name);
 
         TextView t = new TextView(this);
@@ -346,6 +355,50 @@ public class MainActivity extends Activity {
             content.addView(t);
         }
 
+    }
+
+    void showSettings() {
+        currentPage = "settings";
+        base("⚙️ الإعدادات");
+
+        TextView t = title("📖 حجم خط القرآن",20);
+        t.setTextColor(gold);
+        content.addView(t);
+
+        TextView preview = new TextView(this);
+        preview.setText("بِسْمِ اللَّهِ الرَّحْمَـٰنِ الرَّحِيمِ");
+        preview.setTextColor(Color.WHITE);
+        preview.setTextSize(24);
+        preview.setGravity(Gravity.CENTER);
+        preview.setPadding(15,25,15,25);
+        content.addView(preview);
+
+        SeekBar size = new SeekBar(this);
+        size.setMax(30);
+        size.setProgress(12);
+        content.addView(size);
+
+        size.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            public void onProgressChanged(SeekBar b,int p,boolean f) {
+                preview.setTextSize(12 + p);
+            }
+            public void onStartTrackingTouch(SeekBar b) {}
+            public void onStopTrackingTouch(SeekBar b) {}
+        });
+
+        Button plus = btn("＋ تكبير الخط");
+        Button minus = btn("－ تصغير الخط");
+        addRow(plus,minus);
+
+        plus.setOnClickListener(v -> {
+            float x=preview.getTextSize()/getResources().getDisplayMetrics().scaledDensity;
+            preview.setTextSize(x+2);
+        });
+
+        minus.setOnClickListener(v -> {
+            float x=preview.getTextSize()/getResources().getDisplayMetrics().scaledDensity;
+            if(x>12) preview.setTextSize(x-2);
+        });
     }
 
     void showTasbeeh() {
