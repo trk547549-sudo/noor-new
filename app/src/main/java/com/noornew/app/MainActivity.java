@@ -270,7 +270,6 @@ public class MainActivity extends Activity {
             b.setOnClickListener(v -> showSurah(name));
             content.addView(b);
         }
-        back();
     }
 
     void showSurah(String name) {
@@ -311,7 +310,6 @@ public class MainActivity extends Activity {
 
         t.setText(text.toString());
         content.addView(t);
-        back();
     }
 
     void showAdhkar() {
@@ -326,7 +324,6 @@ public class MainActivity extends Activity {
             content.addView(t);
         }
 
-        back();
     }
 
     void showHadith() {
@@ -349,7 +346,6 @@ public class MainActivity extends Activity {
             content.addView(t);
         }
 
-        back();
     }
 
     void showTasbeeh() {
@@ -380,7 +376,6 @@ public class MainActivity extends Activity {
             count.setText("0");
         });
 
-        back();
     }
 
     void showNames() {
@@ -396,7 +391,6 @@ public class MainActivity extends Activity {
             content.addView(t);
         }
 
-        back();
     }
 
     void showPrayer() {
@@ -415,6 +409,5 @@ public class MainActivity extends Activity {
             content.addView(t);
         }
 
-        back();
     }
 }
