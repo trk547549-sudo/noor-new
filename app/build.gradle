@@ -13,4 +13,23 @@ android {
         versionCode 1
         versionName '1.0'
     }
+
+    signingConfigs {
+        release {
+            def ksPath = System.getenv("NOOR_KEYSTORE_PATH")
+            if (ksPath != null) {
+                storeFile file(ksPath)
+                storePassword System.getenv("NOOR_STORE_PASSWORD")
+                keyAlias System.getenv("NOOR_KEY_ALIAS")
+                keyPassword System.getenv("NOOR_KEY_PASSWORD")
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            signingConfig signingConfigs.release
+            minifyEnabled false
+        }
+    }
 }
