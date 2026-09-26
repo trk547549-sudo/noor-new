@@ -758,7 +758,8 @@ void showTasbeeh() {
                     "Isha"
                 };
 
-                runOnUiThread(() -> {
+                final String displayLocation = locationText;
+            runOnUiThread(() -> {
                     content.removeAllViews();
 
                     // جدولة الأذان للصلوات الخمس
@@ -831,7 +832,7 @@ void showTasbeeh() {
                     }
 
                     TextView info =
-                        title(locationText,16);
+                        title(displayLocation,16);
 
                     info.setTextColor(Color.LTGRAY);
                     content.addView(info);
