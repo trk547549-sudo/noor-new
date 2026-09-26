@@ -1,8 +1,6 @@
 package com.noornew.app;
 
-import android.app.AlarmManager;
-import android.app.BroadcastReceiver;
-import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
@@ -19,13 +17,10 @@ public class AdhanReceiver extends BroadcastReceiver {
         }
 
         android.content.SharedPreferences prefs =
-            context.getSharedPreferences(
-                "noor_settings",
-                Context.MODE_PRIVATE
-            );
+                context.getSharedPreferences("noor_settings", Context.MODE_PRIVATE);
 
         boolean enabled =
-            prefs.getBoolean("adhan_enabled", true);
+                prefs.getBoolean("adhan_enabled", true);
 
         if (!enabled) {
             return;
@@ -37,12 +32,11 @@ public class AdhanReceiver extends BroadcastReceiver {
             }
 
             mediaPlayer = MediaPlayer.create(
-                context.getApplicationContext(),
-                R.raw.adhan
+                    context.getApplicationContext(),
+                    R.raw.adhan
             );
 
             if (mediaPlayer != null) {
-
                 mediaPlayer.setOnCompletionListener(mp -> {
                     mp.release();
                     mediaPlayer = null;
