@@ -250,6 +250,33 @@ LinearLayout root, content;
         darkMode.setBackground(cardBackground(Color.rgb(15,27,31), gold, 18));
         content.addView(darkMode);
 
+        android.widget.Switch adhanSwitch =
+            new android.widget.Switch(this);
+
+        adhanSwitch.setText("🔔 أذان الصلاة والتنبيهات");
+        adhanSwitch.setTextColor(Color.WHITE);
+        adhanSwitch.setTextSize(18);
+        adhanSwitch.setGravity(Gravity.RIGHT);
+        adhanSwitch.setPadding(20, 25, 20, 25);
+        adhanSwitch.setBackground(
+            cardBackground(Color.rgb(15,27,31), gold, 18)
+        );
+
+        android.content.SharedPreferences prefs =
+            getSharedPreferences("noor_settings", MODE_PRIVATE);
+
+        adhanSwitch.setChecked(
+            prefs.getBoolean("adhan_enabled", true)
+        );
+
+        adhanSwitch.setOnCheckedChangeListener((buttonView, isChecked) ->
+            prefs.edit()
+                .putBoolean("adhan_enabled", isChecked)
+                .apply()
+        );
+
+        content.addView(adhanSwitch);
+
         TextView about = new TextView(this);
         about.setText("ℹ️ حول نور\n\nمطور التطبيق: علاء العمراني\nala alamrany");
         about.setTextColor(Color.WHITE);
@@ -586,79 +613,296 @@ void showTasbeeh() {
 
     void showPrayer() {
         currentPage = "prayer";
-        base("🕌 مواقيت الصلاة - صنعاء");
+        base("🕌 مواقيت الصلاة");
 
-        TextView loading = title("جاري تحميل مواقيت الصلاة...",18);
+        TextView loading = title("جاري تحديد الموقع وتحميل المواقيت...",18);
         loading.setTextColor(Color.WHITE);
         content.addView(loading);
 
+        android.location.LocationManager lm =
+            (android.location.LocationManager) getSystemService(LOCATION_SERVICE);
+
+        boolean fine =
+            checkSelfPermission(android.Manifest.permission.ACCESS_FINE_LOCATION)
+            == android.content.pm.PackageManager.PERMISSION_GRANTED;
+
+        boolean coarse =
+            checkSelfPermission(android.Manifest.permission.ACCESS_COARSE_LOCATION)
+            == android.content.pm.PackageManager.PERMISSION_GRANTED;
+
+        if (!fine && !coarse) {
+            requestPermissions(
+                new String[]{
+                    android.Manifest.permission.ACCESS_FINE_LOCATION,
+                    android.Manifest.permission.ACCESS_COARSE_LOCATION
+                },
+                1001
+            );
+
+            loading.setText("📍 اسمح للتطبيق بالوصول إلى موقعك لحساب مواقيت الصلاة.");
+            return;
+        }
+
         new Thread(() -> {
             try {
+                android.location.Location location = null;
+
+                if (fine) {
+                    try {
+                        location = lm.getLastKnownLocation(
+                            android.location.LocationManager.GPS_PROVIDER);
+                    } catch (Exception ignored) {}
+                }
+
+                if (location == null) {
+                    try {
+                        location = lm.getLastKnownLocation(
+                            android.location.LocationManager.NETWORK_PROVIDER);
+                    } catch (Exception ignored) {}
+                }
+
+                String city = "Sanaa";
+                String country = "Yemen";
+                String locationText = "📍 صنعاء - اليمن";
+
+                if (location != null) {
+                    android.location.Geocoder geocoder =
+                        new android.location.Geocoder(
+                            this, java.util.Locale.getDefault());
+
+                    try {
+                        java.util.List<android.location.Address> addresses =
+                            geocoder.getFromLocation(
+                                location.getLatitude(),
+                                location.getLongitude(),
+                                1);
+
+                        if (addresses != null && !addresses.isEmpty()) {
+                            android.location.Address a = addresses.get(0);
+
+                            if (a.getLocality() != null &&
+                                !a.getLocality().isEmpty()) {
+                                city = a.getLocality();
+                            } else if (a.getSubAdminArea() != null) {
+                                city = a.getSubAdminArea();
+                            }
+
+                            if (a.getCountryName() != null &&
+                                !a.getCountryName().isEmpty()) {
+                                country = a.getCountryName();
+                            }
+
+                            locationText = "📍 " + city + " - " + country;
+                        }
+                    } catch (Exception ignored) {}
+                }
+
                 java.text.SimpleDateFormat f =
-                    new java.text.SimpleDateFormat("dd-MM-yyyy", java.util.Locale.US);
+                    new java.text.SimpleDateFormat(
+                        "dd-MM-yyyy",
+                        java.util.Locale.US);
+
                 String date = f.format(new java.util.Date());
 
                 URL url = new URL(
                     "https://api.aladhan.com/v1/timingsByCity/" +
-                    date + "?city=Sanaa&country=Yemen");
+                    date +
+                    "?city=" +
+                    java.net.URLEncoder.encode(city, "UTF-8") +
+                    "&country=" +
+                    java.net.URLEncoder.encode(country, "UTF-8"));
 
-                HttpURLConnection c = (HttpURLConnection) url.openConnection();
+                HttpURLConnection c =
+                    (HttpURLConnection) url.openConnection();
+
                 c.setRequestMethod("GET");
                 c.setConnectTimeout(10000);
                 c.setReadTimeout(10000);
 
                 BufferedReader r = new BufferedReader(
                     new InputStreamReader(c.getInputStream()));
+
                 StringBuilder b = new StringBuilder();
                 String line;
-                while ((line = r.readLine()) != null) b.append(line);
-                r.close();
 
-                JSONObject rootJson = new JSONObject(b.toString());
+                while ((line = r.readLine()) != null) {
+                    b.append(line);
+                }
+
+                r.close();
+                c.disconnect();
+
+                JSONObject rootJson =
+                    new JSONObject(b.toString());
+
                 JSONObject timings =
-                    rootJson.getJSONObject("data").getJSONObject("timings");
+                    rootJson.getJSONObject("data")
+                           .getJSONObject("timings");
 
                 String[] names = {
-                    "الفجر","الشروق","الظهر","العصر","المغرب","العشاء"
+                    "الفجر",
+                    "الشروق",
+                    "الظهر",
+                    "العصر",
+                    "المغرب",
+                    "العشاء"
                 };
+
                 String[] keys = {
-                    "Fajr","Sunrise","Dhuhr","Asr","Maghrib","Isha"
+                    "Fajr",
+                    "Sunrise",
+                    "Dhuhr",
+                    "Asr",
+                    "Maghrib",
+                    "Isha"
                 };
 
                 runOnUiThread(() -> {
                     content.removeAllViews();
 
-                    for (int i=0;i<names.length;i++) {
+                    // جدولة الأذان للصلوات الخمس
+                    scheduleAdhan("الفجر", timings.optString("Fajr"));
+                    scheduleAdhan("الظهر", timings.optString("Dhuhr"));
+                    scheduleAdhan("العصر", timings.optString("Asr"));
+                    scheduleAdhan("المغرب", timings.optString("Maghrib"));
+                    scheduleAdhan("العشاء", timings.optString("Isha"));
+
+                    for (int i = 0; i < names.length; i++) {
                         TextView t = new TextView(this);
+
                         try {
-                            t.setText("🕌  " + names[i] + "   —   " +
-                                      timings.getString(keys[i]));
-                        } catch(Exception e) {
+                            String value =
+                                timings.getString(keys[i]);
+
+                            String[] parts = value.split(":");
+
+                            int hour =
+                                Integer.parseInt(parts[0]);
+
+                            int minute =
+                                Integer.parseInt(parts[1]);
+
+                            String period =
+                                hour >= 12 ? "م" : "ص";
+
+                            int hour12 = hour % 12;
+
+                            if (hour12 == 0) {
+                                hour12 = 12;
+                            }
+
+                            String time =
+                                String.format(
+                                    java.util.Locale.getDefault(),
+                                    "%02d:%02d %s",
+                                    hour12,
+                                    minute,
+                                    period);
+
+                            t.setText(
+                                "🕌  " + names[i] +
+                                "   —   " + time
+                            );
+
+                        } catch (Exception e) {
                             t.setText(names[i]);
                         }
+
                         t.setTextColor(Color.WHITE);
                         t.setTextSize(20);
                         t.setGravity(Gravity.CENTER);
                         t.setPadding(15,20,15,20);
+
                         t.setBackground(
-                            cardBackground(Color.rgb(15,27,31),gold,18));
+                            cardBackground(
+                                Color.rgb(15,27,31),
+                                gold,
+                                18)
+                        );
+
                         content.addView(t);
 
                         LinearLayout.LayoutParams lp =
                             new LinearLayout.LayoutParams(-1,-2);
+
                         lp.setMargins(5,5,5,5);
                         t.setLayoutParams(lp);
                     }
 
-                    TextView info = title("📍 صنعاء - اليمن",16);
+                    TextView info =
+                        title(locationText,16);
+
                     info.setTextColor(Color.LTGRAY);
                     content.addView(info);
                 });
 
-            } catch(Exception e) {
+            } catch (Exception e) {
                 runOnUiThread(() ->
-                    loading.setText("تعذر تحميل المواقيت. تحقق من اتصال الإنترنت."));
+                    loading.setText(
+                        "تعذر تحميل المواقيت. تحقق من اتصال الإنترنت."
+                    )
+                );
             }
         }).start();
     }
+
+
+    void scheduleAdhan(String prayerName, String time24) {
+        try {
+            String[] parts = time24.split(":");
+
+            int hour = Integer.parseInt(parts[0]);
+            int minute = Integer.parseInt(parts[1]);
+
+            Calendar cal = Calendar.getInstance();
+            cal.set(Calendar.HOUR_OF_DAY, hour);
+            cal.set(Calendar.MINUTE, minute);
+            cal.set(Calendar.SECOND, 0);
+            cal.set(Calendar.MILLISECOND, 0);
+
+            if (cal.getTimeInMillis() <= System.currentTimeMillis()) {
+                return;
+            }
+
+            Intent intent = new Intent(this, AdhanReceiver.class);
+            intent.setAction("NOOR_ADHAN");
+
+            intent.putExtra("prayer_name", prayerName);
+
+            int requestCode = prayerName.hashCode();
+
+            PendingIntent pendingIntent =
+                PendingIntent.getBroadcast(
+                    this,
+                    requestCode,
+                    intent,
+                    PendingIntent.FLAG_UPDATE_CURRENT |
+                    PendingIntent.FLAG_IMMUTABLE
+                );
+
+            AlarmManager alarmManager =
+                (AlarmManager) getSystemService(ALARM_SERVICE);
+
+            if (alarmManager != null) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                    if (alarmManager.canScheduleExactAlarms()) {
+                        alarmManager.setExactAndAllowWhileIdle(
+                            AlarmManager.RTC_WAKEUP,
+                            cal.getTimeInMillis(),
+                            pendingIntent
+                        );
+                    }
+                } else {
+                    alarmManager.setExactAndAllowWhileIdle(
+                        AlarmManager.RTC_WAKEUP,
+                        cal.getTimeInMillis(),
+                        pendingIntent
+                    );
+                }
+            }
+
+        } catch (Exception ignored) {
+        }
+    }
+
 }
