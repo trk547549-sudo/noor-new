@@ -2,7 +2,8 @@ package com.noornew.app;
 
 import android.app.*;
 import android.os.*;
-import android.graphics.Color;\nimport android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.Bitmap;
 import android.graphics.pdf.PdfRenderer;
 import android.os.ParcelFileDescriptor;
 import android.widget.ImageView;
