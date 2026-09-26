@@ -308,7 +308,7 @@ public class MainActivity extends Activity {
                 ibnKathirRenderer = null;
             }
             if (ibnKathirFile != null) {
-                ibnKathirFile.close();
+                try { ibnKathirFile.close(); } catch (IOException e) { }
                 ibnKathirFile = null;
             }
             showProphets();
@@ -577,7 +577,7 @@ public class MainActivity extends Activity {
             }
 
             if (ibnKathirFile != null) {
-                ibnKathirFile.close();
+                try { ibnKathirFile.close(); } catch (IOException e) { }
                 ibnKathirFile = null;
             }
 
