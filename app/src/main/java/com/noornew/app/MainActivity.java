@@ -3,10 +3,6 @@ package com.noornew.app;
 import android.app.*;
 import android.os.*;
 import android.graphics.Color;
-import android.graphics.Bitmap;
-import android.graphics.pdf.PdfRenderer;
-import android.os.ParcelFileDescriptor;
-import android.widget.ImageView;
 
 import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
@@ -18,13 +14,7 @@ import java.net.*;
 import org.json.*;
 
 public class MainActivity extends Activity {
-    PdfRenderer ibnKathirRenderer;
-    ParcelFileDescriptor ibnKathirFile;
-    ImageView ibnKathirImage;
-    int ibnKathirPage = 0;
-
-
-    LinearLayout root, content;
+LinearLayout root, content;
     int gold = Color.rgb(205,165,70);
     int dark = Color.rgb(18,28,25);
     String currentPage = "home";
@@ -302,16 +292,6 @@ public class MainActivity extends Activity {
             showQuran();
         } else if (currentPage.equals("quran")) {
             showHome();
-        } else if (currentPage.equals("ibnkathir")) {
-            if (ibnKathirRenderer != null) {
-                ibnKathirRenderer.close();
-                ibnKathirRenderer = null;
-            }
-            if (ibnKathirFile != null) {
-                try { ibnKathirFile.close(); } catch (IOException e) { }
-                ibnKathirFile = null;
-            }
-            showProphets();
         } else {
             showHome();
         }
@@ -431,12 +411,6 @@ public class MainActivity extends Activity {
     void showProphets() {
         currentPage = "prophets";
         base("📚 قصص الأنبياء");
-
-    android.widget.Button bookButton = new android.widget.Button(this);
-    bookButton.setText("📖 قراءة كتاب قصص الأنبياء — ابن كثير");
-    bookButton.setTextSize(17);
-    bookButton.setOnClickListener(v -> showIbnKathir());
-    content.addView(bookButton);
 
 
         TextView intro = title(
@@ -565,159 +539,7 @@ public class MainActivity extends Activity {
         }
     }
 
-
-    void showIbnKathir() {
-        currentPage = "ibnkathir";
-        base("📖 قصص الأنبياء — ابن كثير");
-
-        try {
-            if (ibnKathirRenderer != null) {
-                ibnKathirRenderer.close();
-                ibnKathirRenderer = null;
-            }
-
-            if (ibnKathirFile != null) {
-                try { ibnKathirFile.close(); } catch (IOException e) { }
-                ibnKathirFile = null;
-            }
-
-            java.io.File pdfFile =
-                new java.io.File(getCacheDir(), "ibn_kathir.pdf");
-
-            if (!pdfFile.exists() ||
-                pdfFile.length() < 1000000) {
-
-                java.io.InputStream in =
-                    getAssets().open("قصص_الأنبياء_لابن_كثير1.pdf");
-
-                java.io.FileOutputStream out =
-                    new java.io.FileOutputStream(pdfFile);
-
-                byte[] buffer = new byte[8192];
-                int len;
-
-                while ((len = in.read(buffer)) != -1) {
-                    out.write(buffer, 0, len);
-                }
-
-                in.close();
-                out.close();
-            }
-
-            ibnKathirFile =
-                ParcelFileDescriptor.open(
-                    pdfFile,
-                    ParcelFileDescriptor.MODE_READ_ONLY
-                );
-
-            ibnKathirRenderer =
-                new PdfRenderer(ibnKathirFile);
-
-            ibnKathirPage = 0;
-
-            android.widget.TextView pageInfo =
-                new android.widget.TextView(this);
-
-            pageInfo.setTextSize(16);
-            pageInfo.setTextColor(gold);
-            pageInfo.setGravity(Gravity.CENTER);
-            pageInfo.setPadding(10,10,10,10);
-
-            ibnKathirImage = new ImageView(this);
-            ibnKathirImage.setAdjustViewBounds(true);
-            ibnKathirImage.setScaleType(
-                ImageView.ScaleType.FIT_CENTER
-            );
-
-            content.addView(pageInfo);
-            content.addView(
-                ibnKathirImage,
-                new LinearLayout.LayoutParams(-1,0,1)
-            );
-
-            android.widget.LinearLayout controls =
-                new android.widget.LinearLayout(this);
-
-            controls.setOrientation(
-                android.widget.LinearLayout.HORIZONTAL
-            );
-            controls.setGravity(Gravity.CENTER);
-
-            android.widget.Button previous =
-                new android.widget.Button(this);
-
-            previous.setText("⬅ السابق");
-
-            android.widget.Button next =
-                new android.widget.Button(this);
-
-            next.setText("التالي ➡");
-
-            controls.addView(previous);
-            controls.addView(next);
-
-            content.addView(controls);
-
-            Runnable renderPage = () -> {
-                if (ibnKathirRenderer == null) return;
-
-                PdfRenderer.Page page =
-                    ibnKathirRenderer.openPage(ibnKathirPage);
-
-                Bitmap bitmap =
-                    Bitmap.createBitmap(
-                        page.getWidth(),
-                        page.getHeight(),
-                        Bitmap.Config.ARGB_8888
-                    );
-
-                page.render(
-                    bitmap,
-                    null,
-                    null,
-                    PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY
-                );
-
-                page.close();
-
-                ibnKathirImage.setImageBitmap(bitmap);
-
-                pageInfo.setText(
-                    "صفحة " +
-                    (ibnKathirPage + 1) +
-                    " من " +
-                    ibnKathirRenderer.getPageCount()
-                );
-            };
-
-            previous.setOnClickListener(v -> {
-                if (ibnKathirPage > 0) {
-                    ibnKathirPage--;
-                    renderPage.run();
-                }
-            });
-
-            next.setOnClickListener(v -> {
-                if (ibnKathirPage <
-                    ibnKathirRenderer.getPageCount() - 1) {
-
-                    ibnKathirPage++;
-                    renderPage.run();
-                }
-            });
-
-            renderPage.run();
-
-        } catch (Exception e) {
-            android.widget.Toast.makeText(
-                this,
-                "تعذر فتح كتاب ابن كثير: " + e.getMessage(),
-                android.widget.Toast.LENGTH_LONG
-            ).show();
-        }
-    }
-
-    void showTasbeeh() {
+void showTasbeeh() {
         base("المسبحة");
 
         final TextView count=new TextView(this);
