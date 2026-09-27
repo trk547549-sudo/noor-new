@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.graphics.Color;
 
 import android.graphics.Typeface;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.GradientDrawable;
 import android.view.*;
 import android.widget.*;
@@ -103,13 +105,14 @@ LinearLayout root, content;
         root = new LinearLayout(this);
         root.setOrientation(LinearLayout.VERTICAL);
 
-        GradientDrawable bg = new GradientDrawable(
-            GradientDrawable.Orientation.TL_BR,
-            new int[]{
-                Color.rgb(7,15,18),
-                Color.rgb(18,31,34),
-                Color.rgb(9,18,20)
-            });
+        BitmapDrawable bg = new BitmapDrawable(
+            getResources(),
+            BitmapFactory.decodeResource(
+                getResources(),
+                R.drawable.noor_background
+            )
+        );
+        bg.setGravity(Gravity.FILL);
         root.setBackground(bg);
 
         TextView header = title(head,24);
