@@ -161,7 +161,7 @@ LinearLayout root, content;
 
         section("📖  القرآن والذكر");
 
-        Button quran = btn("📖\nالقرآن الكريم");
+        Button quran = btn("📖\nالقرآن الكريم\nاقرأ واستمتع بالقرآن");
         quran.setOnClickListener(v -> showQuran());
 
         Button adhkarBtn = btn("🤲\nالأذكار والأدعية");
@@ -190,15 +190,15 @@ LinearLayout root, content;
 
         section("✨  نور المعرفة");
 
-        Button namesBtn = btn("✨\nأسماء الله الحسنى");
+        Button namesBtn = btn("✨\nأسماء الله الحسنى\nتعرف على أسماء الله");
         namesBtn.setOnClickListener(v -> showNames());
 
-        Button hadith = btn("📜\nالأحاديث النبوية");
+        Button hadith = btn("📜\nالأحاديث النبوية\nأحاديث ومصادرها");
         hadith.setOnClickListener(v -> showHadith());
 
         addRow(namesBtn, hadith);
 
-        Button prophets = btn("📚\nقصص الأنبياء");
+        Button prophets = btn("📚\nقصص الأنبياء\nعبر ودروس من حياتهم");
         prophets.setOnClickListener(v -> showProphets());
 
         Button hijri = btn("📅\nالتاريخ الهجري");
@@ -219,10 +219,10 @@ LinearLayout root, content;
 
         section("⚙️  التطبيق");
 
-        Button settings = btn("⚙️\nالإعدادات");
+        Button settings = btn("⚙️\nالإعدادات\nتحكم في تجربتك");
         settings.setOnClickListener(v -> showSettings());
 
-        Button about = btn("ℹ️\nحول نور الهدى");
+        Button about = btn("ℹ️\nحول التطبيق\nنور الهدى");
         about.setOnClickListener(v ->
             new AlertDialog.Builder(this)
                 .setTitle("🌙 نور الهدى")

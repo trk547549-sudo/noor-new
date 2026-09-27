@@ -4,32 +4,46 @@
     android:viewportWidth="108"
     android:viewportHeight="108">
 
+    <!-- خلفية خضراء إسلامية -->
     <path
-        android:fillColor="#062C2A"
+        android:fillColor="#063B36"
         android:pathData="M54,4A50,50 0,1 0,54 104A50,50 0,1 0,54 4"/>
 
+    <!-- هلال -->
     <path
         android:fillColor="#F4C95D"
-        android:pathData="M70,18A25,25 0,1 0,70 68A20,20 0,1 1,70 18"/>
+        android:pathData="M72,15A25,25 0,1 0,72 63A20,20 0,1 1,72 15"/>
+
+    <!-- الكعبة -->
+    <path
+        android:fillColor="#111111"
+        android:pathData="M27,48 L54,39 L81,48 L81,72 L54,82 L27,72 Z"/>
+
+    <!-- كسوة الكعبة الذهبية -->
+    <path
+        android:fillColor="#DDB84C"
+        android:pathData="M27,49 L54,40 L81,49 L81,55 L54,47 L27,55 Z"/>
 
     <path
         android:fillColor="#DDB84C"
-        android:pathData="M25,58 L54,48 L83,58 L54,68 Z"/>
+        android:pathData="M51,46 L57,48 L57,79 L51,81 Z"/>
+
+    <!-- باب الكعبة -->
+    <path
+        android:fillColor="#C99B32"
+        android:pathData="M47,61 L61,61 L61,78 L47,78 Z"/>
+
+    <!-- كتاب صغير أسفل الكعبة -->
+    <path
+        android:fillColor="#F7E8B0"
+        android:pathData="M23,82 L43,77 L54,82 L54,91 L42,87 L23,92 Z"/>
 
     <path
-        android:fillColor="#FFF3C4"
-        android:pathData="M28,57 L52,49 L52,75 L28,67 Z"/>
+        android:fillColor="#FFF4CE"
+        android:pathData="M54,82 L65,77 L85,82 L85,92 L66,87 L54,91 Z"/>
 
-    <path
-        android:fillColor="#FFF8DC"
-        android:pathData="M56,49 L80,57 L80,67 L56,75 Z"/>
-
-    <path
-        android:fillColor="#DDB84C"
-        android:pathData="M54,47 L58,76 L50,76 Z"/>
-
+    <!-- إطار ذهبي -->
     <path
         android:fillColor="#F4C95D"
-        android:pathData="M15,87 L93,87 L93,91 L15,91 Z"/>
-
+        android:pathData="M12,96 L96,96 L96,100 L12,100 Z"/>
 </vector>
