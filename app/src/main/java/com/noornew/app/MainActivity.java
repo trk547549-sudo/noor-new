@@ -77,7 +77,7 @@ LinearLayout root, content;
     Button btn(String text) {
         Button b = new Button(this);
         b.setText(text);
-        b.setTextSize(16);
+        b.setTextSize(18);
         b.setTextColor(Color.WHITE);
         b.setAllCaps(false);
         b.setGravity(Gravity.CENTER);
@@ -85,9 +85,9 @@ LinearLayout root, content;
         b.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
         b.setSingleLine(false);
         b.setMaxLines(3);
-        b.setMinHeight(105);
+        b.setMinHeight(130);
         b.setIncludeFontPadding(true);
-        b.setPadding(8,10,8,10);
+        b.setPadding(10,14,10,14);
         b.setTypeface(Typeface.DEFAULT,Typeface.BOLD);
         b.setBackground(cardBackground(Color.rgb(17,29,33),gold,22));
         return b;
@@ -304,11 +304,11 @@ LinearLayout root, content;
         LinearLayout row = new LinearLayout(this);
         row.setOrientation(LinearLayout.HORIZONTAL);
         row.setGravity(Gravity.CENTER);
-        row.setPadding(2,3,2,3);
+        row.setPadding(4,5,4,5);
 
         LinearLayout.LayoutParams lp =
             new LinearLayout.LayoutParams(0,-2,1);
-        lp.setMargins(5,5,5,5);
+        lp.setMargins(7,7,7,7);
 
         left.setLayoutParams(new LinearLayout.LayoutParams(lp));
         right.setLayoutParams(new LinearLayout.LayoutParams(lp));
