@@ -130,64 +130,70 @@ LinearLayout root, content;
     }
 
     void showHome() {
-        base("نور");
+        currentPage = "home";
+        base("🌙 نور الهدى");
 
-        TextView logo = title("☾  نــور  ☽", 31);
-        logo.setTextColor(gold);
-        logo.setPadding(10,18,10,4);
+        TextView logo = title("۞  نــور الــهــدى  ۞", 30);
+        logo.setTextColor(Color.rgb(235,205,120));
+        logo.setPadding(10,22,10,5);
         content.addView(logo);
 
-        TextView sub = title("طريقك إلى رضا الله",17);
-        sub.setTextColor(Color.LTGRAY);
-        sub.setPadding(10,0,10,14);
-        content.addView(sub);
+        TextView subtitle = title("رفيقك إلى الطمأنينة وذكر الله",17);
+        subtitle.setTextColor(Color.LTGRAY);
+        subtitle.setPadding(10,0,10,15);
+        content.addView(subtitle);
 
         TextView welcome = title(
-            "السلام عليكم\nاللهم اجعل هذا اليوم بداية خير لنا جميعًا",18);
+            "السلام عليكم ورحمة الله وبركاته\n\n"
+            + "﴿ وَاذْكُر رَّبَّكَ إِذَا نَسِيتَ ﴾\n\n"
+            + "اجعل لسانك عامرًا بذكر الله",
+            17
+        );
         welcome.setTextColor(Color.WHITE);
-        welcome.setPadding(20,18,20,18);
-        welcome.setBackground(cardBackground(Color.rgb(15,27,31), gold, 24));
+        welcome.setPadding(20,22,20,22);
+        welcome.setBackground(
+            cardBackground(Color.rgb(13,29,31), gold, 28)
+        );
         content.addView(welcome);
 
         section("📖  القرآن والذكر");
 
-        Button q = btn("📖\nالقرآن الكريم");
-        q.setOnClickListener(v -> showQuran());
+        Button quran = btn("📖\nالقرآن الكريم");
+        quran.setOnClickListener(v -> showQuran());
 
-        Button a = btn("📿\nالأذكار");
-        a.setOnClickListener(v -> showAdhkar());
+        Button adhkarBtn = btn("🤲\nالأذكار والأدعية");
+        adhkarBtn.setOnClickListener(v -> showAdhkar());
 
-        addRow(q,a);
+        addRow(quran, adhkarBtn);
 
-        section("🕌  العبادات");
+        section("🕌  الصلاة والعبادة");
 
-        Button prayer = btn("🕌\nالصلاة\nمواقيت الصلاة");
+        Button prayer = btn("🕌\nمواقيت الصلاة");
         prayer.setOnClickListener(v -> showPrayer());
 
-        Button tasbeeh = btn("📿\nالمسبحة\nاذكر الله");
+        Button adhan = btn("🔔\nالأذان");
+        adhan.setOnClickListener(v -> showPrayer());
+
+        addRow(prayer, adhan);
+
+        Button qibla = btn("🕋\nالقبلة");
+        qibla.setOnClickListener(v ->
+            Toast.makeText(this,"اتجاه القبلة قيد التطوير",Toast.LENGTH_SHORT).show());
+
+        Button tasbeeh = btn("📿\nالمسبحة");
         tasbeeh.setOnClickListener(v -> showTasbeeh());
 
-        addRow(prayer,tasbeeh);
+        addRow(qibla, tasbeeh);
+
+        section("✨  نور المعرفة");
 
         Button namesBtn = btn("✨\nأسماء الله الحسنى");
         namesBtn.setOnClickListener(v -> showNames());
 
-        Button qib = btn("🕋\nالقبلة\nاتجاه القبلة");
-        qib.setOnClickListener(v ->
-            Toast.makeText(this,"اتجاه القبلة قيد التطوير",Toast.LENGTH_SHORT).show());
-
-        addRow(namesBtn,qib);
-
-        section("📚  السنة والسيرة");
-
         Button hadith = btn("📜\nالأحاديث النبوية");
         hadith.setOnClickListener(v -> showHadith());
 
-        Button seerah = btn("🌟\nالسيرة النبوية");
-        seerah.setOnClickListener(v ->
-            Toast.makeText(this,"السيرة النبوية قيد التطوير",Toast.LENGTH_SHORT).show());
-
-        addRow(hadith,seerah);
+        addRow(namesBtn, hadith);
 
         Button prophets = btn("📚\nقصص الأنبياء");
         prophets.setOnClickListener(v -> showProphets());
@@ -196,9 +202,9 @@ LinearLayout root, content;
         hijri.setOnClickListener(v ->
             Toast.makeText(this,"التاريخ الهجري قيد التطوير",Toast.LENGTH_SHORT).show());
 
-        addRow(prophets,hijri);
+        addRow(prophets, hijri);
 
-        section("🌙  نور في يومك");
+        section("🌙  نور يومك");
 
         Button morning = btn("☀️\nأذكار الصباح");
         morning.setOnClickListener(v -> showAdhkar());
@@ -206,32 +212,35 @@ LinearLayout root, content;
         Button evening = btn("🌙\nأذكار المساء");
         evening.setOnClickListener(v -> showAdhkar());
 
-        addRow(morning,evening);
-
-        Button ramadan = btn("🌙\nرمضان والصيام");
-        ramadan.setOnClickListener(v ->
-            Toast.makeText(this,"قسم رمضان والصيام قيد التطوير",Toast.LENGTH_SHORT).show());
-
-        Button favorites = btn("❤️\nالمفضلة");
-        favorites.setOnClickListener(v ->
-            Toast.makeText(this,"المفضلة قيد التطوير",Toast.LENGTH_SHORT).show());
-
-        addRow(ramadan,favorites);
+        addRow(morning, evening);
 
         section("⚙️  التطبيق");
 
         Button settings = btn("⚙️\nالإعدادات");
         settings.setOnClickListener(v -> showSettings());
 
-        Button about = btn("ℹ️\nحول نور");
+        Button about = btn("ℹ️\nحول نور الهدى");
         about.setOnClickListener(v ->
             new AlertDialog.Builder(this)
-                .setTitle("🕌 نور")
-                .setMessage("موسوعة إسلامية\n\nمطور التطبيق:\nعلاء العمراني\nala alamrany")
+                .setTitle("🌙 نور الهدى")
+                .setMessage(
+                    "رفيقك إلى الطمأنينة وذكر الله\n\n"
+                    + "مطور التطبيق:\n"
+                    + "علاء العمراني\n"
+                    + "ala alamrany"
+                )
                 .setPositiveButton("حسنًا",null)
                 .show());
 
-        addRow(settings,about);
+        addRow(settings, about);
+
+        TextView footer = title(
+            "۞  نور الهدى  ۞\nعلاء العمراني • ala alamrany",
+            14
+        );
+        footer.setTextColor(Color.rgb(180,180,180));
+        footer.setPadding(10,25,10,30);
+        content.addView(footer);
     }
 
     void showSettings() {
