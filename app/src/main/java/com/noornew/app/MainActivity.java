@@ -133,10 +133,10 @@ LinearLayout root, content;
     }
 
     Button btn2(String main, String sub) {
-        Button b = btn(main + "\\n" + sub);
+        Button b = btn(main + "\n" + sub);
 
         android.text.SpannableString sp =
-            new android.text.SpannableString(main + "\\n" + sub);
+            new android.text.SpannableString(main + "\n" + sub);
 
         int startSub = main.length() + 1;
 
@@ -180,7 +180,7 @@ LinearLayout root, content;
         content.addView(sub);
 
         TextView welcome = title(
-            "السلام عليكم ورحمة الله وبركاته\\n\\nواذكر ربك إذا نسيت\\n\\nاجعل لسانك عامرًا بذكر الله",
+            "السلام عليكم ورحمة الله وبركاته\n\nواذكر ربك إذا نسيت\n\nاجعل لسانك عامرًا بذكر الله",
             18
         );
         welcome.setTextColor(Color.WHITE);
@@ -240,9 +240,9 @@ LinearLayout root, content;
             new AlertDialog.Builder(this)
                 .setTitle("🌙 نور الهدى")
                 .setMessage(
-                    "تطبيق إسلامي شامل\\n\\n" +
-                    "مطور التطبيق:\\n" +
-                    "علاء العمراني\\n" +
+                    "تطبيق إسلامي شامل\n\n" +
+                    "مطور التطبيق:\n" +
+                    "علاء العمراني\n" +
                     "ala alamrany"
                 )
                 .setPositiveButton("حسنًا",null)
