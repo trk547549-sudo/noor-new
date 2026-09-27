@@ -113,7 +113,7 @@ LinearLayout root, content;
             )
         );
         bg.setGravity(Gravity.FILL);
-        root.setBackground(bg);
+        root.setBackgroundColor(android.graphics.Color.WHITE);
 
         TextView header = title(head,24);
         header.setTextColor(gold);
@@ -170,12 +170,12 @@ LinearLayout root, content;
         base("🌙 نور الهدى");
 
         TextView logo = title("☾  نــور الهدى  ☽", 31);
-        logo.setTextColor(gold);
+        logo.setTextColor(android.graphics.Color.BLACK);
         logo.setPadding(10,18,10,4);
         content.addView(logo);
 
         TextView sub = title("رفيقك إلى الطمأنينة وذكر الله",17);
-        sub.setTextColor(Color.LTGRAY);
+        sub.setTextColor(android.graphics.Color.BLACK);
         sub.setPadding(10,0,10,14);
         content.addView(sub);
 
@@ -183,7 +183,7 @@ LinearLayout root, content;
             "السلام عليكم ورحمة الله وبركاته\n\nواذكر ربك إذا نسيت\n\nاجعل لسانك عامرًا بذكر الله",
             18
         );
-        welcome.setTextColor(Color.WHITE);
+        welcome.setTextColor(android.graphics.Color.BLACK);
         welcome.setPadding(20,18,20,18);
         welcome.setBackground(cardBackground(Color.rgb(15,27,31), gold, 24));
         content.addView(welcome);
