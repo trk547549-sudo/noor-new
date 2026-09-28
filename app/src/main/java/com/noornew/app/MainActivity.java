@@ -113,7 +113,7 @@ LinearLayout root, content;
             )
         );
         bg.setGravity(Gravity.FILL);
-        root.setBackgroundColor(android.graphics.Color.WHITE);
+        root.setBackground(bg);
 
         TextView header = title(head,24);
         header.setTextColor(gold);
@@ -361,9 +361,11 @@ LinearLayout root, content;
         currentPage = "surah";
         base("📖 سورة " + name);
 
+        content.setBackgroundColor(Color.WHITE);
+
         TextView t = new TextView(this);
-        t.setTextColor(Color.WHITE);
-        t.setTextSize(20);
+        t.setTextColor(Color.BLACK);
+        t.setTextSize(22);
         t.setGravity(Gravity.RIGHT);
         t.setPadding(20, 20, 20, 20);
 
