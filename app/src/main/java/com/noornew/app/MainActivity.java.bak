@@ -66,7 +66,7 @@ LinearLayout root, content;
     TextView title(String t, int size) {
         TextView v = new TextView(this);
         v.setText(t);
-        v.setTextColor(currentPage.equals("home") ? Color.WHITE : Color.BLACK);
+        v.setTextColor(Color.WHITE);
         v.setTextSize(size);
         v.setTypeface(Typeface.DEFAULT, Typeface.BOLD);
         v.setGravity(Gravity.CENTER);
@@ -78,7 +78,7 @@ LinearLayout root, content;
         Button b = new Button(this);
         b.setText(text);
         b.setTextSize(18);
-        b.setTextColor(currentPage.equals("home") ? Color.WHITE : Color.BLACK);
+        b.setTextColor(Color.WHITE);
         b.setAllCaps(false);
         b.setGravity(Gravity.CENTER);
         b.setTextDirection(View.TEXT_DIRECTION_RTL);
@@ -113,12 +113,7 @@ LinearLayout root, content;
             )
         );
         bg.setGravity(Gravity.FILL);
-
-        if (currentPage.equals("home")) {
-            root.setBackground(bg);
-        } else {
-            root.setBackgroundColor(Color.WHITE);
-        }
+        root.setBackground(bg);
 
         TextView header = title(head,24);
         header.setTextColor(gold);
@@ -127,10 +122,6 @@ LinearLayout root, content;
 
         content = new LinearLayout(this);
         content.setOrientation(LinearLayout.VERTICAL);
-
-        if (!currentPage.equals("home")) {
-            content.setBackgroundColor(Color.WHITE);
-        }
         content.setPadding(8,4,8,20);
 
         ScrollView scroll = new ScrollView(this);
@@ -142,10 +133,10 @@ LinearLayout root, content;
     }
 
     Button btn2(String main, String sub) {
-        Button b = btn(main + "\n" + sub);
+        Button b = btn(main + "\\n" + sub);
 
         android.text.SpannableString sp =
-            new android.text.SpannableString(main + "\n" + sub);
+            new android.text.SpannableString(main + "\\n" + sub);
 
         int startSub = main.length() + 1;
 
@@ -179,20 +170,20 @@ LinearLayout root, content;
         base("🌙 نور الهدى");
 
         TextView logo = title("☾  نــور الهدى  ☽", 31);
-        logo.setTextColor(android.graphics.Color.BLACK);
+        logo.setTextColor(gold);
         logo.setPadding(10,18,10,4);
         content.addView(logo);
 
         TextView sub = title("رفيقك إلى الطمأنينة وذكر الله",17);
-        sub.setTextColor(android.graphics.Color.BLACK);
+        sub.setTextColor(Color.LTGRAY);
         sub.setPadding(10,0,10,14);
         content.addView(sub);
 
         TextView welcome = title(
-            "السلام عليكم ورحمة الله وبركاته\n\nواذكر ربك إذا نسيت\n\nاجعل لسانك عامرًا بذكر الله",
+            "السلام عليكم ورحمة الله وبركاته\\n\\nواذكر ربك إذا نسيت\\n\\nاجعل لسانك عامرًا بذكر الله",
             18
         );
-        welcome.setTextColor(android.graphics.Color.BLACK);
+        welcome.setTextColor(Color.WHITE);
         welcome.setPadding(20,18,20,18);
         welcome.setBackground(cardBackground(Color.rgb(15,27,31), gold, 24));
         content.addView(welcome);
@@ -249,9 +240,9 @@ LinearLayout root, content;
             new AlertDialog.Builder(this)
                 .setTitle("🌙 نور الهدى")
                 .setMessage(
-                    "تطبيق إسلامي شامل\n\n" +
-                    "مطور التطبيق:\n" +
-                    "علاء العمراني\n" +
+                    "تطبيق إسلامي شامل\\n\\n" +
+                    "مطور التطبيق:\\n" +
+                    "علاء العمراني\\n" +
                     "ala alamrany"
                 )
                 .setPositiveButton("حسنًا",null)
@@ -370,11 +361,9 @@ LinearLayout root, content;
         currentPage = "surah";
         base("📖 سورة " + name);
 
-        content.setBackgroundColor(Color.WHITE);
-
         TextView t = new TextView(this);
-        t.setTextColor(Color.BLACK);
-        t.setTextSize(22);
+        t.setTextColor(Color.WHITE);
+        t.setTextSize(20);
         t.setGravity(Gravity.RIGHT);
         t.setPadding(20, 20, 20, 20);
 
