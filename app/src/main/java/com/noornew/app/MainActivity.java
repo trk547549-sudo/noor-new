@@ -78,7 +78,8 @@ LinearLayout root, content;
         Button b = new Button(this);
         b.setText(text);
         b.setTextSize(18);
-        b.setTextColor(currentPage.equals("home") ? Color.WHITE : Color.BLACK);
+        boolean home = currentPage.equals("home");
+        b.setTextColor(home ? Color.WHITE : Color.BLACK);
         b.setAllCaps(false);
         b.setGravity(Gravity.CENTER);
         b.setTextDirection(View.TEXT_DIRECTION_RTL);
@@ -89,7 +90,11 @@ LinearLayout root, content;
         b.setIncludeFontPadding(true);
         b.setPadding(10,14,10,14);
         b.setTypeface(Typeface.DEFAULT,Typeface.BOLD);
-        b.setBackground(cardBackground(Color.rgb(17,29,33),gold,22));
+        if (currentPage.equals("home")) {
+            b.setBackground(cardBackground(Color.rgb(17,29,33),gold,22));
+        } else {
+            b.setBackground(cardBackground(Color.WHITE,gold,22));
+        }
         return b;
     }
 
@@ -180,12 +185,12 @@ LinearLayout root, content;
         base("🌙 نور الهدى");
 
         TextView logo = title("☾  نــور الهدى  ☽", 31);
-        logo.setTextColor(android.graphics.Color.BLACK);
+        logo.setTextColor(android.graphics.Color.WHITE);
         logo.setPadding(10,18,10,4);
         content.addView(logo);
 
         TextView sub = title("رفيقك إلى الطمأنينة وذكر الله",17);
-        sub.setTextColor(android.graphics.Color.BLACK);
+        sub.setTextColor(android.graphics.Color.WHITE);
         sub.setPadding(10,0,10,14);
         content.addView(sub);
 
@@ -193,7 +198,7 @@ LinearLayout root, content;
             "السلام عليكم ورحمة الله وبركاته\n\nواذكر ربك إذا نسيت\n\nاجعل لسانك عامرًا بذكر الله",
             18
         );
-        welcome.setTextColor(android.graphics.Color.BLACK);
+        welcome.setTextColor(android.graphics.Color.WHITE);
         welcome.setPadding(20,18,20,18);
         welcome.setBackground(cardBackground(Color.rgb(15,27,31), gold, 24));
         content.addView(welcome);
@@ -355,7 +360,7 @@ LinearLayout root, content;
     void showQuran() {
         currentPage = "quran";
         base("القرآن الكريم");
-        TextView info = title("سور القرآن الكريم",20);
+        TextView info = title("✦  سُوَرُ القُرآنِ الكَرِيم  ✦",20);
         info.setTextColor(Color.rgb(235,205,120));
         content.addView(info);
 
