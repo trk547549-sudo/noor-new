@@ -627,12 +627,13 @@ void showTasbeeh() {
     }
 
     void showNames() {
+        currentPage = "names";
         base("أسماء الله الحسنى");
 
         for(String x:names) {
             TextView t=new TextView(this);
             t.setText("﴿ "+x+" ﴾");
-            t.setTextColor(Color.WHITE);
+            t.setTextColor(Color.BLACK);
             t.setTextSize(21);
             t.setGravity(Gravity.CENTER);
             t.setPadding(10,12,10,12);
