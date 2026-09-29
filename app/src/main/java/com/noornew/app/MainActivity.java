@@ -378,16 +378,20 @@ LinearLayout root, content;
 
         content.setBackgroundColor(Color.WHITE);
 
-        TextView t = new TextView(this);
-        t.setTextColor(Color.BLACK);
-        t.setTextSize(22);
-        t.setGravity(Gravity.RIGHT);
-        t.setPadding(20, 20, 20, 20);
+        int number = Arrays.asList(surahs).indexOf(name) + 1;
 
-        StringBuilder text = new StringBuilder();
+        // البسملة بشكل مستقل
+        TextView basmala = new TextView(this);
+        basmala.setText("بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ");
+        basmala.setTextColor(Color.rgb(45, 45, 45));
+        basmala.setTextSize(24);
+        basmala.setTypeface(Typeface.DEFAULT, Typeface.BOLD);
+        basmala.setGravity(Gravity.CENTER);
+        basmala.setTextDirection(View.TEXT_DIRECTION_RTL);
+        basmala.setPadding(12, 25, 12, 25);
+        content.addView(basmala);
 
         try {
-            int number = Arrays.asList(surahs).indexOf(name) + 1;
             BufferedReader r = new BufferedReader(
                 new InputStreamReader(
                     getAssets().open("quran-simple.txt"), "UTF-8"
@@ -395,24 +399,76 @@ LinearLayout root, content;
             );
 
             String line;
-            while ((line = r.readLine()) != null) {
-                if (line.startsWith(number + "|")) {
-                    String[] parts = line.split("\\|", 3);
-                    if (parts.length == 3) {
-                        text.append(parts[1])
-                            .append(" — ")
-                            .append(parts[2])
-                            .append("\n\n");
-                    }
-                }
-            }
-            r.close();
-        } catch (Exception e) {
-            text.append("حدث خطأ أثناء قراءة القرآن.");
-        }
+            int displayedVerse = 0;
 
-        t.setText(text.toString());
-        content.addView(t);
+            while ((line = r.readLine()) != null) {
+
+                if (!line.startsWith(number + "|")) {
+                    continue;
+                }
+
+                String[] parts = line.split("\\|", 3);
+
+                if (parts.length != 3) {
+                    continue;
+                }
+
+                String verseNumber = parts[1];
+                String verse = parts[2].trim();
+
+                // إذا كانت البسملة مدمجة في بداية الآية، نفصلها
+                String basmalaText = "بِسْمِ اللَّهِ الرَّحْمَـٰنِ الرَّحِيمِ";
+
+                if (verse.startsWith(basmalaText)) {
+                    verse = verse.substring(basmalaText.length()).trim();
+                }
+
+                // لا نعرض السطر إذا أصبح فارغًا بعد فصل البسملة
+                if (verse.length() == 0) {
+                    continue;
+                }
+
+                displayedVerse++;
+
+                TextView ayah = new TextView(this);
+                ayah.setText("﴿ " + verse + " ﴾\n\n" + "۝ " + verseNumber);
+                ayah.setTextColor(Color.BLACK);
+                ayah.setTextSize(22);
+                ayah.setGravity(Gravity.RIGHT);
+                ayah.setTextDirection(View.TEXT_DIRECTION_RTL);
+                ayah.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_END);
+                ayah.setPadding(22, 20, 22, 20);
+
+                android.graphics.drawable.GradientDrawable card =
+                    new android.graphics.drawable.GradientDrawable();
+                card.setColor(Color.WHITE);
+                card.setStroke(2, Color.rgb(190, 155, 70));
+                card.setCornerRadius(22);
+
+                ayah.setBackground(card);
+
+                LinearLayout.LayoutParams lp =
+                    new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT
+                    );
+
+                lp.setMargins(6, 6, 6, 10);
+                ayah.setLayoutParams(lp);
+
+                content.addView(ayah);
+            }
+
+            r.close();
+
+        } catch (Exception e) {
+            TextView error = new TextView(this);
+            error.setText("حدث خطأ أثناء قراءة القرآن.");
+            error.setTextColor(Color.RED);
+            error.setTextSize(18);
+            error.setGravity(Gravity.CENTER);
+            content.addView(error);
+        }
     }
 
     void showAdhkar() {
