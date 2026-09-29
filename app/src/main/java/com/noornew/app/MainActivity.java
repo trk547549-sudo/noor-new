@@ -176,6 +176,7 @@ LinearLayout root, content;
     }
 
     void showHome() {
+        currentPage = "home";
         base("🌙 نور الهدى");
 
         TextView logo = title("☾  نــور الهدى  ☽", 31);
