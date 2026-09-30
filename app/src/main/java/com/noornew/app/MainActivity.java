@@ -404,16 +404,50 @@ LinearLayout root, content;
         currentPage = "islamic_topic";
         base(heading);
 
+        String verse = "";
+
+        if (heading.contains("أركان الإسلام")) {
+            verse = "وَأَقِيمُوا الصَّلَاةَ وَآتُوا الزَّكَاةَ\nسورة البقرة: 43";
+        } else if (heading.contains("أركان الإيمان")) {
+            verse = "آمَنَ الرَّسُولُ بِمَا أُنزِلَ إِلَيْهِ مِن رَّبِّهِ وَالْمُؤْمِنُونَ\nسورة البقرة: 285";
+        } else if (heading.contains("بر الوالدين")) {
+            verse = "وَبِالْوَالِدَيْنِ إِحْسَانًا\nسورة الإسراء: 23";
+        } else if (heading.contains("عقوق الوالدين")) {
+            verse = "فَلَا تَقُل لَّهُمَا أُفٍّ وَلَا تَنْهَرْهُمَا\nسورة الإسراء: 23";
+        } else if (heading.contains("رمضان")) {
+            verse = "كُتِبَ عَلَيْكُمُ الصِّيَامُ كَمَا كُتِبَ عَلَى الَّذِينَ مِن قَبْلِكُمْ لَعَلَّكُمْ تَتَّقُونَ\nسورة البقرة: 183";
+        } else if (heading.contains("فضل القرآن")) {
+            verse = "إِنَّ هَٰذَا الْقُرْآنَ يَهْدِي لِلَّتِي هِيَ أَقْوَمُ\nسورة الإسراء: 9";
+        } else if (heading.contains("التوبة")) {
+            verse = "إِنَّ اللَّهَ يَغْفِرُ الذُّنُوبَ جَمِيعًا\nسورة الزمر: 53";
+        } else if (heading.contains("الصلاة")) {
+            verse = "إِنَّ الصَّلَاةَ كَانَتْ عَلَى الْمُؤْمِنِينَ كِتَابًا مَّوْقُوتًا\nسورة النساء: 103";
+        } else if (heading.contains("الطهارة")) {
+            verse = "إِنَّ اللَّهَ يُحِبُّ التَّوَّابِينَ وَيُحِبُّ الْمُتَطَهِّرِينَ\nسورة البقرة: 222";
+        } else if (heading.contains("الأخلاق")) {
+            verse = "وَقُولُوا لِلنَّاسِ حُسْنًا\nسورة البقرة: 83";
+        } else if (heading.contains("الصدق")) {
+            verse = "يَا أَيُّهَا الَّذِينَ آمَنُوا اتَّقُوا اللَّهَ وَكُونُوا مَعَ الصَّادِقِينَ\nسورة التوبة: 119";
+        } else if (heading.contains("حقوق الجار")) {
+            verse = "وَالْجَارِ ذِي الْقُرْبَى وَالْجَارِ الْجُنُبِ\nسورة النساء: 36";
+        }
+
         TextView text = title(
-            explanation + "\n\n💡 " + tip,
+            "📖 الشرح\n\n" +
+            explanation +
+            "\n\n🕋 آية مرتبطة بالموضوع\n\n" +
+            verse +
+            "\n\n💡 فائدة ونصيحة\n\n" +
+            tip,
             20
         );
 
         text.setTextColor(Color.WHITE);
         text.setGravity(Gravity.RIGHT);
         text.setTextDirection(View.TEXT_DIRECTION_RTL);
-        text.setLineSpacing(12,1.25f);
-        text.setPadding(20,20,20,20);
+        text.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_END);
+        text.setLineSpacing(14,1.3f);
+        text.setPadding(20,24,20,24);
 
         text.setBackground(
             cardBackground(
