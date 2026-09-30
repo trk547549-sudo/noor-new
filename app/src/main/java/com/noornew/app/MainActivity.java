@@ -1439,7 +1439,7 @@ LinearLayout root, content;
         base(category);
 
         TextView intro = title(
-            "أذكار مرتبة وسهلة القراءة",
+            "🤲 أذكار مرتبة حسب القسم",
             20
         );
 
@@ -1448,25 +1448,324 @@ LinearLayout root, content;
         intro.setTextDirection(View.TEXT_DIRECTION_RTL);
         content.addView(intro);
 
-        for (String x : adhkar) {
-            addDhikrCard(x);
+        String[][] list = getDhikrList(category);
+
+        for (String[] item : list) {
+            addDhikrCard(
+                item[0],
+                Integer.parseInt(item[1]),
+                item[2],
+                category
+            );
         }
     }
 
-    void addDhikrCard(String dhikr) {
+    String[][] getDhikrList(String category) {
+
+        if (category.contains("الصباح")) {
+            return new String[][] {
+                {
+                    "اللهم أنت ربي لا إله إلا أنت، خلقتني وأنا عبدك، وأنا على عهدك ووعدك ما استطعت، أعوذ بك من شر ما صنعت، أبوء لك بنعمتك علي وأبوء بذنبي فاغفر لي، فإنه لا يغفر الذنوب إلا أنت",
+                    "1",
+                    "صحيح البخاري 6306"
+                },
+                {
+                    "رضيت بالله ربًا، وبالإسلام دينًا، وبمحمد صلى الله عليه وسلم نبيًا",
+                    "3",
+                    "رواه أبو داود والترمذي"
+                },
+                {
+                    "بسم الله الذي لا يضر مع اسمه شيء في الأرض ولا في السماء وهو السميع العليم",
+                    "3",
+                    "رواه أبو داود والترمذي"
+                },
+                {
+                    "حسبي الله لا إله إلا هو، عليه توكلت وهو رب العرش العظيم",
+                    "7",
+                    "ورد عن أبي الدرداء رضي الله عنه"
+                },
+                {
+                    "سبحان الله وبحمده",
+                    "100",
+                    "رواه مسلم"
+                },
+                {
+                    "لا إله إلا الله وحده لا شريك له، له الملك وله الحمد وهو على كل شيء قدير",
+                    "10",
+                    "ورد في أذكار الصباح"
+                },
+                {
+                    "قل هو الله أحد، وقل أعوذ برب الفلق، وقل أعوذ برب الناس",
+                    "3",
+                    "رواه أبو داود والترمذي"
+                }
+            };
+        }
+
+        if (category.contains("المساء")) {
+            return new String[][] {
+                {
+                    "اللهم أنت ربي لا إله إلا أنت، خلقتني وأنا عبدك، وأنا على عهدك ووعدك ما استطعت، أعوذ بك من شر ما صنعت، أبوء لك بنعمتك علي وأبوء بذنبي فاغفر لي، فإنه لا يغفر الذنوب إلا أنت",
+                    "1",
+                    "صحيح البخاري 6306"
+                },
+                {
+                    "رضيت بالله ربًا، وبالإسلام دينًا، وبمحمد صلى الله عليه وسلم نبيًا",
+                    "3",
+                    "رواه أبو داود والترمذي"
+                },
+                {
+                    "بسم الله الذي لا يضر مع اسمه شيء في الأرض ولا في السماء وهو السميع العليم",
+                    "3",
+                    "رواه أبو داود والترمذي"
+                },
+                {
+                    "حسبي الله لا إله إلا هو، عليه توكلت وهو رب العرش العظيم",
+                    "7",
+                    "ورد عن أبي الدرداء رضي الله عنه"
+                },
+                {
+                    "سبحان الله وبحمده",
+                    "100",
+                    "رواه مسلم"
+                },
+                {
+                    "لا إله إلا الله وحده لا شريك له، له الملك وله الحمد وهو على كل شيء قدير",
+                    "10",
+                    "ورد في أذكار الصباح والمساء"
+                },
+                {
+                    "قل هو الله أحد، وقل أعوذ برب الفلق، وقل أعوذ برب الناس",
+                    "3",
+                    "رواه أبو داود والترمذي"
+                }
+            };
+        }
+
+        if (category.contains("بعد الصلاة")) {
+            return new String[][] {
+                {
+                    "أستغفر الله",
+                    "3",
+                    "رواه مسلم"
+                },
+                {
+                    "اللهم أنت السلام ومنك السلام تباركت يا ذا الجلال والإكرام",
+                    "1",
+                    "رواه مسلم"
+                },
+                {
+                    "سبحان الله",
+                    "33",
+                    "رواه مسلم"
+                },
+                {
+                    "الحمد لله",
+                    "33",
+                    "رواه مسلم"
+                },
+                {
+                    "الله أكبر",
+                    "34",
+                    "رواه مسلم"
+                },
+                {
+                    "لا إله إلا الله وحده لا شريك له، له الملك وله الحمد وهو على كل شيء قدير",
+                    "1",
+                    "رواه مسلم"
+                }
+            };
+        }
+
+        if (category.contains("النوم")) {
+            return new String[][] {
+                {
+                    "آية الكرسي",
+                    "1",
+                    "رواه البخاري في قصة أبي هريرة"
+                },
+                {
+                    "قراءة آخر آيتين من سورة البقرة",
+                    "1",
+                    "رواه البخاري ومسلم"
+                },
+                {
+                    "قل هو الله أحد، وقل أعوذ برب الفلق، وقل أعوذ برب الناس",
+                    "3",
+                    "رواه البخاري"
+                },
+                {
+                    "سبحان الله",
+                    "33",
+                    "رواه البخاري ومسلم"
+                },
+                {
+                    "الحمد لله",
+                    "33",
+                    "رواه البخاري ومسلم"
+                },
+                {
+                    "الله أكبر",
+                    "34",
+                    "رواه البخاري ومسلم"
+                },
+                {
+                    "باسمك اللهم أموت وأحيا",
+                    "1",
+                    "رواه البخاري"
+                }
+            };
+        }
+
+        if (category.contains("المنزل")) {
+            return new String[][] {
+                {
+                    "بسم الله",
+                    "1",
+                    "يقال عند دخول المنزل والطعام"
+                },
+                {
+                    "السلام عليكم ورحمة الله",
+                    "1",
+                    "من هدي السلام بين المسلمين"
+                },
+                {
+                    "اللهم إني أسألك خير المولج وخير المخرج، بسم الله ولجنا وبسم الله خرجنا وعلى الله ربنا توكلنا",
+                    "1",
+                    "ورد في سنن أبي داود"
+                },
+                {
+                    "أعوذ بكلمات الله التامات من شر ما خلق",
+                    "1",
+                    "رواه مسلم"
+                }
+            };
+        }
+
+        if (category.contains("السفر")) {
+            return new String[][] {
+                {
+                    "سبحان الذي سخر لنا هذا وما كنا له مقرنين وإنا إلى ربنا لمنقلبون",
+                    "1",
+                    "سورة الزخرف 13-14"
+                },
+                {
+                    "اللهم إنا نسألك في سفرنا هذا البر والتقوى ومن العمل ما ترضى",
+                    "1",
+                    "رواه مسلم"
+                },
+                {
+                    "اللهم هون علينا سفرنا هذا واطو عنا بعده",
+                    "1",
+                    "رواه مسلم"
+                },
+                {
+                    "اللهم أنت الصاحب في السفر والخليفة في الأهل",
+                    "1",
+                    "رواه مسلم"
+                }
+            };
+        }
+
+        if (category.contains("الطعام")) {
+            return new String[][] {
+                {
+                    "بسم الله",
+                    "1",
+                    "رواه أبو داود والترمذي"
+                },
+                {
+                    "بسم الله أوله وآخره",
+                    "1",
+                    "رواه أبو داود والترمذي"
+                },
+                {
+                    "الحمد لله الذي أطعمني هذا ورزقنيه من غير حول مني ولا قوة",
+                    "1",
+                    "رواه أبو داود والترمذي"
+                },
+                {
+                    "الحمد لله",
+                    "1",
+                    "من حمد الله بعد الطعام"
+                }
+            };
+        }
+
+        return new String[][] {
+            {
+                "سبحان الله",
+                "1",
+                "ذكر عام"
+            },
+            {
+                "الحمد لله",
+                "1",
+                "ذكر عام"
+            },
+            {
+                "الله أكبر",
+                "1",
+                "ذكر عام"
+            },
+            {
+                "لا إله إلا الله",
+                "1",
+                "ذكر عام"
+            },
+            {
+                "أستغفر الله",
+                "1",
+                "ذكر عام"
+            },
+            {
+                "سبحان الله وبحمده",
+                "1",
+                "رواه مسلم"
+            },
+            {
+                "لا حول ولا قوة إلا بالله",
+                "1",
+                "رواه البخاري ومسلم"
+            },
+            {
+                "رب اغفر لي",
+                "1",
+                "دعاء"
+            },
+            {
+                "رب زدني علمًا",
+                "1",
+                "سورة طه 114"
+            }
+        };
+    }
+
+    void addDhikrCard(
+        String dhikr,
+        int target,
+        String source,
+        String category
+    ) {
 
         android.content.SharedPreferences prefs =
-            getSharedPreferences("noor_dhikr_progress", MODE_PRIVATE);
+            getSharedPreferences(
+                "noor_dhikr_progress",
+                MODE_PRIVATE
+            );
 
-        String key = "count_" + dhikr;
-        int[] count = {prefs.getInt(key, 0)};
+        String key =
+            "count_" + category + "_" + dhikr;
 
-        int target = 10;
+        int[] count = {
+            prefs.getInt(key, 0)
+        };
 
         LinearLayout box = new LinearLayout(this);
         box.setOrientation(LinearLayout.VERTICAL);
         box.setGravity(Gravity.CENTER);
         box.setPadding(18,18,18,18);
+
         box.setBackground(
             cardBackground(
                 Color.rgb(15,27,31),
@@ -1476,21 +1775,41 @@ LinearLayout root, content;
         );
 
         TextView text = new TextView(this);
-        text.setText("✦ " + dhikr);
+
+        text.setText(
+            "✦ " + dhikr
+        );
+
         text.setTextColor(Color.WHITE);
-        text.setTextSize(21);
+        text.setTextSize(20);
         text.setGravity(Gravity.RIGHT);
         text.setTextDirection(View.TEXT_DIRECTION_RTL);
         text.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_END);
+        text.setLineSpacing(10,1.25f);
         text.setPadding(10,10,10,15);
 
+        TextView sourceView = new TextView(this);
+
+        sourceView.setText(
+            "📚 " + source
+        );
+
+        sourceView.setTextColor(gold);
+        sourceView.setTextSize(14);
+        sourceView.setGravity(Gravity.RIGHT);
+        sourceView.setTextDirection(View.TEXT_DIRECTION_RTL);
+        sourceView.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_END);
+        sourceView.setPadding(10,5,10,10);
+
         TextView counter = new TextView(this);
+
         counter.setTextSize(18);
         counter.setTextColor(gold);
         counter.setGravity(Gravity.CENTER);
         counter.setTextDirection(View.TEXT_DIRECTION_RTL);
 
         Button add = new Button(this);
+
         add.setText("🔢 ذكرته");
         add.setTextSize(18);
         add.setTextColor(Color.WHITE);
@@ -1498,20 +1817,33 @@ LinearLayout root, content;
         add.setMinHeight(60);
 
         Button reset = new Button(this);
+
         reset.setText("↩️ إعادة");
         reset.setTextSize(16);
         reset.setTextColor(Color.WHITE);
         reset.setAllCaps(false);
 
         Runnable updateCounter = () -> {
-            counter.setText(
-                "التكرار: " + count[0] + " / " + target
-            );
 
             if (count[0] >= target) {
+
                 counter.setText(
-                    "✅ اكتمل الذكر — " + target + " / " + target
+                    "✅ مكتمل — " +
+                    target + " / " + target
                 );
+
+                add.setText("✅ مكتمل");
+
+            } else {
+
+                counter.setText(
+                    "التكرار: " +
+                    count[0] +
+                    " / " +
+                    target
+                );
+
+                add.setText("🔢 ذكرته");
             }
         };
 
@@ -1520,32 +1852,30 @@ LinearLayout root, content;
         add.setOnClickListener(v -> {
 
             if (count[0] < target) {
+
                 count[0]++;
 
                 prefs.edit()
-                    .putInt(key, count[0])
+                    .putInt(key,count[0])
                     .apply();
 
                 updateCounter.run();
             }
-
-            if (count[0] >= target) {
-                add.setText("✅ مكتمل");
-            }
         });
 
         reset.setOnClickListener(v -> {
+
             count[0] = 0;
 
             prefs.edit()
-                .putInt(key, 0)
+                .putInt(key,0)
                 .apply();
 
-            add.setText("🔢 ذكرته");
             updateCounter.run();
         });
 
         box.addView(text);
+        box.addView(sourceView);
         box.addView(counter);
         box.addView(add);
         box.addView(reset);
