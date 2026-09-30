@@ -226,14 +226,15 @@ LinearLayout root, content;
 
         Button a = btn2("📿 الأذكار والأدعية", "راحة للقلب والروح");
         a.setOnClickListener(v -> showAdhkar());
-        addRow(q,a);
+        addRow(q,islamic);
 
         Button tasbeeh = btn2("📿 المسبحة", "سبح - أذكار - عدد");
         tasbeeh.setOnClickListener(v -> showTasbeeh());
 
         Button morning = btn2("☀️ أذكار الصباح", "ابدأ يومك بذكر الله");
         morning.setOnClickListener(v -> showAdhkar());
-        addRow(tasbeeh,morning);
+        addRow(a,tasbeeh);
+        content.addView(morning);
 
         section("✦ خدمات نور الهدى ✦");
 
