@@ -218,6 +218,12 @@ LinearLayout root, content;
         Button q = btn2("📖 القرآن الكريم", "اقرأ واستمتع بالقرآن");
         q.setOnClickListener(v -> showQuran());
 
+        Button islamic = btn2(
+            "📚 إسلاميات",
+            "تعلم أمور دينك بطريقة سهلة"
+        );
+        islamic.setOnClickListener(v -> showIslamicTopics());
+
         Button a = btn2("📿 الأذكار والأدعية", "راحة للقلب والروح");
         a.setOnClickListener(v -> showAdhkar());
         addRow(q,a);
@@ -280,6 +286,149 @@ LinearLayout root, content;
                 .show());
 
         addRow(settings,about);
+    }
+
+    void showIslamicTopics() {
+        currentPage = "islamic";
+        base("📚 إسلاميات");
+
+        TextView intro = title(
+            "تعلم وتذكّر\nموضوعات إسلامية مختصرة ومفيدة",
+            20
+        );
+        intro.setTextColor(Color.WHITE);
+        intro.setGravity(Gravity.CENTER);
+        intro.setTextDirection(View.TEXT_DIRECTION_RTL);
+        intro.setPadding(10,10,10,20);
+        content.addView(intro);
+
+        addIslamicCard(
+            "🕌 أركان الإسلام",
+            "أركان الإسلام خمسة: الشهادتان، وإقامة الصلاة، وإيتاء الزكاة، وصوم رمضان، وحج البيت لمن استطاع إليه سبيلًا.",
+            "تعلم أركان الإسلام واجعلها أساسًا في حياتك."
+        );
+
+        addIslamicCard(
+            "💎 أركان الإيمان",
+            "الإيمان بالله، وملائكته، وكتبه، ورسله، واليوم الآخر، والقدر خيره وشره.",
+            "الإيمان أصل عظيم يقوم عليه دين المسلم."
+        );
+
+        addIslamicCard(
+            "❤️ بر الوالدين",
+            "بر الوالدين يكون بالإحسان إليهما، واحترامهما، والكلام الطيب معهما، ومساعدتهما فيما تستطيع.",
+            "ومن البر أن تحافظ على الأدب والرحمة والصبر مع الوالدين."
+        );
+
+        addIslamicCard(
+            "⚠️ عقوق الوالدين",
+            "العقوق هو الإساءة إلى الوالدين أو إيذاؤهما أو التقصير في حقهما بغير عذر.",
+            "احرص على الكلام الطيب، وتجنب الإهانة ورفع الصوت والإيذاء."
+        );
+
+        addIslamicCard(
+            "🌙 فضل صيام رمضان",
+            "رمضان شهر عظيم يصوم فيه المسلم من الفجر إلى غروب الشمس، ويكثر فيه من الصلاة والقرآن والذكر والصدقة.",
+            "الصيام عبادة، وهو فرصة للتقوى والصبر ومساعدة المحتاجين."
+        );
+
+        addIslamicCard(
+            "📖 فضل القرآن",
+            "القرآن الكريم كتاب الله، وقراءته وتدبره والعمل به من أعظم أبواب الخير.",
+            "اجعل لك وردًا يوميًا من القرآن ولو كان قليلًا."
+        );
+
+        addIslamicCard(
+            "🤲 التوبة والاستغفار",
+            "باب التوبة مفتوح، ومن أخطأ فليستغفر الله وليترك الذنب وليعزم على عدم العودة إليه.",
+            "لا تيأس من رحمة الله، وابدأ دائمًا بخطوة صادقة نحو الخير."
+        );
+    }
+
+    void addIslamicCard(
+        String heading,
+        String explanation,
+        String tip
+    ) {
+        LinearLayout card = new LinearLayout(
+            this
+        );
+
+        card.setOrientation(
+            LinearLayout.VERTICAL
+        );
+
+        card.setGravity(Gravity.RIGHT);
+        card.setPadding(22,22,22,22);
+
+        card.setBackground(
+            cardBackground(
+                Color.rgb(15,27,31),
+                gold,
+                20
+            )
+        );
+
+        LinearLayout.LayoutParams lp =
+            new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            );
+
+        lp.setMargins(5,8,5,8);
+        card.setLayoutParams(lp);
+
+        TextView h = title(
+            heading,
+            21
+        );
+
+        h.setTextColor(
+            Color.rgb(235,205,120)
+        );
+
+        h.setGravity(
+            Gravity.RIGHT
+        );
+
+        h.setTextDirection(
+            View.TEXT_DIRECTION_RTL
+        );
+
+        TextView body = title(
+            explanation,
+            17
+        );
+
+        body.setTextColor(Color.WHITE);
+        body.setGravity(Gravity.RIGHT);
+        body.setTextDirection(
+            View.TEXT_DIRECTION_RTL
+        );
+        body.setPadding(0,12,0,8);
+
+        TextView tipView = title(
+            "💡 " + tip,
+            15
+        );
+
+        tipView.setTextColor(
+            Color.LTGRAY
+        );
+
+        tipView.setGravity(
+            Gravity.RIGHT
+        );
+
+        tipView.setTextDirection(
+            View.TEXT_DIRECTION_RTL
+        );
+
+        card.addView(h);
+        card.addView(body);
+        card.addView(tipView);
+
+        content.addView(card);
     }
 
     void showSettings() {
