@@ -207,13 +207,6 @@ LinearLayout root, content;
 
         section("✦ الوصول السريع ✦");
 
-        Button globalSearch = btn2(
-            "🔎 البحث العام",
-            "ابحث في محتوى نور الهدى"
-        );
-        globalSearch.setOnClickListener(v -> showGlobalSearch());
-        content.addView(globalSearch);
-
         Button q = btn2("📖 القرآن الكريم", "اقرأ واستمتع بالقرآن");
         q.setOnClickListener(v -> showQuran());
 
@@ -372,121 +365,6 @@ LinearLayout root, content;
         }
     }
 
-    void showGlobalSearch() {
-        currentPage = "search";
-        base("البحث العام");
-
-        TextView heading = title("🔎 البحث في نور الهدى", 22);
-        heading.setTextColor(Color.rgb(235,205,120));
-        content.addView(heading);
-
-        EditText search = new EditText(this);
-        search.setHint("ابحث عن سورة أو ذكر أو اسم من أسماء الله...");
-        search.setTextSize(16);
-        search.setSingleLine(true);
-        search.setGravity(Gravity.RIGHT);
-        search.setTextDirection(View.TEXT_DIRECTION_RTL);
-        search.setPadding(20,15,20,15);
-        search.setBackground(cardBackground(Color.WHITE, gold, 18));
-        content.addView(search);
-
-        TextView info = title("اكتب كلمة للبحث", 15);
-        info.setTextColor(Color.LTGRAY);
-        content.addView(info);
-
-        LinearLayout results = new LinearLayout(this);
-        results.setOrientation(LinearLayout.VERTICAL);
-        content.addView(results);
-
-        search.addTextChangedListener(
-            new android.text.TextWatcher() {
-
-                public void beforeTextChanged(
-                    CharSequence s, int start, int count, int after) {}
-
-                public void onTextChanged(
-                    CharSequence s, int start, int before, int count) {
-
-                    String query = s.toString().trim();
-
-                    results.removeAllViews();
-
-                    if (query.length() == 0) {
-                        info.setText("اكتب كلمة للبحث");
-                        return;
-                    }
-
-                    int found = 0;
-
-                    // البحث في السور
-                    for (int i = 0; i < surahs.length; i++) {
-                        if (surahs[i].contains(query) ||
-                            String.valueOf(i + 1).equals(query)) {
-
-                            final String name = surahs[i];
-
-                            Button b = btn(
-                                "📖 سورة " + name +
-                                "  (" + (i + 1) + ")"
-                            );
-
-                            b.setOnClickListener(
-                                v -> showSurah(name)
-                            );
-
-                            results.addView(b);
-                            found++;
-                        }
-                    }
-
-                    // البحث في الأذكار
-                    for (String dhikr : adhkar) {
-                        if (dhikr.contains(query)) {
-                            TextView item = title(
-                                "📿 " + dhikr,
-                                17
-                            );
-
-                            item.setTextColor(Color.WHITE);
-                            item.setPadding(18,18,18,18);
-
-                            results.addView(item);
-                            found++;
-                        }
-                    }
-
-                    // البحث في أسماء الله الحسنى
-                    for (String name : names) {
-                        if (name.contains(query)) {
-                            TextView item = title(
-                                "✨ " + name,
-                                18
-                            );
-
-                            item.setTextColor(
-                                Color.rgb(235,205,120)
-                            );
-
-                            item.setPadding(18,18,18,18);
-
-                            results.addView(item);
-                            found++;
-                        }
-                    }
-
-                    info.setText(
-                        found == 0
-                            ? "لم يتم العثور على نتائج"
-                            : "عدد النتائج: " + found
-                    );
-                }
-
-                public void afterTextChanged(
-                    android.text.Editable s) {}
-            }
-        );
-    }
-
     void showQuran() {
         currentPage = "quran";
         base("القرآن الكريم");
@@ -494,14 +372,6 @@ LinearLayout root, content;
         TextView info = title("✦  سُوَرُ القُرآنِ الكَرِيم  ✦",20);
         info.setTextColor(Color.rgb(235,205,120));
         content.addView(info);
-
-        Button globalSearch = btn("🔎 البحث العام");
-        globalSearch.setOnClickListener(v -> showGlobalSearch());
-        content.addView(globalSearch);
-
-        Button favorites = btn("⭐ المفضلة");
-        favorites.setOnClickListener(v -> showFavorites());
-        content.addView(favorites);
 
         EditText search = new EditText(this);
         search.setHint("🔎 ابحث عن سورة...");
@@ -562,45 +432,6 @@ LinearLayout root, content;
         );
     }
 
-    void showFavorites() {
-        currentPage = "favorites";
-        base("المفضلة");
-
-        Button back = btn("↩ العودة إلى القرآن");
-        back.setOnClickListener(v -> showQuran());
-        content.addView(back);
-
-        TextView heading = title("⭐ السور المفضلة", 21);
-        heading.setTextColor(Color.rgb(235,205,120));
-        content.addView(heading);
-
-        android.content.SharedPreferences pref =
-            getSharedPreferences("noor_favorites", MODE_PRIVATE);
-
-        boolean found = false;
-
-        for (int i = 0; i < surahs.length; i++) {
-            final String name = surahs[i];
-
-            if (pref.getBoolean("surah_" + name, false)) {
-                found = true;
-
-                Button b = btn((i + 1) + " - سورة " + name);
-                b.setOnClickListener(v -> showSurah(name));
-                content.addView(b);
-            }
-        }
-
-        if (!found) {
-            TextView empty = title(
-                "لا توجد سور محفوظة في المفضلة بعد ⭐",
-                17
-            );
-            empty.setTextColor(Color.LTGRAY);
-            content.addView(empty);
-        }
-    }
-
     void showSurah(String name) {
         currentPage = "surah";
         base("سورة " + name);
@@ -612,21 +443,6 @@ LinearLayout root, content;
         TextView heading = title("✦ سورة " + name + " ✦", 22);
         heading.setTextColor(Color.rgb(235,205,120));
         content.addView(heading);
-
-        Button favoriteSurah = btn("🔖 حفظ السورة في المفضلة");
-        favoriteSurah.setOnClickListener(v -> {
-            android.content.SharedPreferences pref =
-                getSharedPreferences("noor_favorites", MODE_PRIVATE);
-
-            pref.edit().putBoolean("surah_" + name, true).apply();
-
-            android.widget.Toast.makeText(
-                this,
-                "⭐ تمت إضافة سورة " + name + " إلى المفضلة",
-                android.widget.Toast.LENGTH_SHORT
-            ).show();
-        });
-        content.addView(favoriteSurah);
 
         EditText search = new EditText(this);
         search.setHint("🔎 ابحث داخل السورة...");

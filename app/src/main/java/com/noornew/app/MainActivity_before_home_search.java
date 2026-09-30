@@ -207,13 +207,6 @@ LinearLayout root, content;
 
         section("✦ الوصول السريع ✦");
 
-        Button globalSearch = btn2(
-            "🔎 البحث العام",
-            "ابحث في محتوى نور الهدى"
-        );
-        globalSearch.setOnClickListener(v -> showGlobalSearch());
-        content.addView(globalSearch);
-
         Button q = btn2("📖 القرآن الكريم", "اقرأ واستمتع بالقرآن");
         q.setOnClickListener(v -> showQuran());
 
