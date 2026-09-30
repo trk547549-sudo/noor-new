@@ -747,6 +747,7 @@ LinearLayout root, content;
         }
 
         final String completeSurah = surahText.toString();
+        final int totalVerseCount = totalVerses;
 
         quranText.setText(completeSurah);
 
@@ -779,7 +780,7 @@ LinearLayout root, content;
                         quranText.setText(completeSurah);
 
                         resultInfo.setText(
-                            "عدد الآيات: " + totalVerses
+                            "عدد الآيات: " + totalVerseCount
                         );
 
                         return;
