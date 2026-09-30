@@ -1342,15 +1342,224 @@ LinearLayout root, content;
         currentPage = "adhkar";
         base("🤲 الأذكار والأدعية");
 
-        for(String x:adhkar) {
-            TextView t=new TextView(this);
-            t.setText("✦ "+x);
-            t.setTextColor(Color.WHITE);
-            t.setTextSize(20);
-            t.setPadding(15,18,15,18);
-            content.addView(t);
-        }
+        TextView intro = title(
+            "اختر قسم الأذكار الذي تريد قراءته",
+            20
+        );
+        intro.setTextColor(gold);
+        intro.setGravity(Gravity.CENTER);
+        intro.setTextDirection(View.TEXT_DIRECTION_RTL);
+        content.addView(intro);
 
+        addDhikrSection(
+            "🌅 أذكار الصباح",
+            "أذكار تبدأ بها يومك بذكر الله وطلب الحفظ والطمأنينة."
+        );
+
+        addDhikrSection(
+            "🌙 أذكار المساء",
+            "أذكار المساء والتحصين وذكر الله في نهاية اليوم."
+        );
+
+        addDhikrSection(
+            "🕌 أذكار بعد الصلاة",
+            "أذكار وأدعية تقال بعد أداء الصلاة."
+        );
+
+        addDhikrSection(
+            "😴 أذكار النوم",
+            "أذكار وأدعية قبل النوم تساعد على ختم اليوم بالذكر."
+        );
+
+        addDhikrSection(
+            "🏠 أذكار المنزل",
+            "أذكار مرتبطة بدخول المنزل والخروج منه وحياة المسلم اليومية."
+        );
+
+        addDhikrSection(
+            "🚗 أذكار السفر",
+            "أدعية وأذكار يحتاجها المسلم عند السفر والتنقل."
+        );
+
+        addDhikrSection(
+            "🍽️ أذكار الطعام",
+            "أذكار وآداب الطعام والشراب."
+        );
+
+        addDhikrSection(
+            "🤲 أدعية وأذكار متنوعة",
+            "مجموعة من الأدعية والأذكار العامة للاستغفار والتسبيح والطلب من الله."
+        );
+    }
+
+    void addDhikrSection(String heading, String description) {
+        Button b = new Button(this);
+
+        b.setText(
+            heading + "\n\n" +
+            description
+        );
+
+        b.setTextSize(19);
+        b.setTextColor(Color.WHITE);
+        b.setGravity(Gravity.CENTER);
+        b.setAllCaps(false);
+        b.setTextDirection(View.TEXT_DIRECTION_RTL);
+        b.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+        b.setSingleLine(false);
+        b.setMinHeight(125);
+        b.setPadding(20,20,20,20);
+
+        b.setBackground(
+            cardBackground(
+                Color.rgb(15,27,31),
+                gold,
+                20
+            )
+        );
+
+        LinearLayout.LayoutParams lp =
+            new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            );
+
+        lp.setMargins(6,8,6,8);
+        b.setLayoutParams(lp);
+
+        b.setOnClickListener(v ->
+            showDhikrCategory(heading)
+        );
+
+        content.addView(b);
+    }
+
+    void showDhikrCategory(String category) {
+        currentPage = "dhikr_category";
+        base(category);
+
+        TextView intro = title(
+            "أذكار مرتبة وسهلة القراءة",
+            20
+        );
+
+        intro.setTextColor(gold);
+        intro.setGravity(Gravity.CENTER);
+        intro.setTextDirection(View.TEXT_DIRECTION_RTL);
+        content.addView(intro);
+
+        for (String x : adhkar) {
+            addDhikrCard(x);
+        }
+    }
+
+    void addDhikrCard(String dhikr) {
+
+        android.content.SharedPreferences prefs =
+            getSharedPreferences("noor_dhikr_progress", MODE_PRIVATE);
+
+        String key = "count_" + dhikr;
+        int[] count = {prefs.getInt(key, 0)};
+
+        int target = 10;
+
+        LinearLayout box = new LinearLayout(this);
+        box.setOrientation(LinearLayout.VERTICAL);
+        box.setGravity(Gravity.CENTER);
+        box.setPadding(18,18,18,18);
+        box.setBackground(
+            cardBackground(
+                Color.rgb(15,27,31),
+                gold,
+                18
+            )
+        );
+
+        TextView text = new TextView(this);
+        text.setText("✦ " + dhikr);
+        text.setTextColor(Color.WHITE);
+        text.setTextSize(21);
+        text.setGravity(Gravity.RIGHT);
+        text.setTextDirection(View.TEXT_DIRECTION_RTL);
+        text.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_END);
+        text.setPadding(10,10,10,15);
+
+        TextView counter = new TextView(this);
+        counter.setTextSize(18);
+        counter.setTextColor(gold);
+        counter.setGravity(Gravity.CENTER);
+        counter.setTextDirection(View.TEXT_DIRECTION_RTL);
+
+        Button add = new Button(this);
+        add.setText("🔢 ذكرته");
+        add.setTextSize(18);
+        add.setTextColor(Color.WHITE);
+        add.setAllCaps(false);
+        add.setMinHeight(60);
+
+        Button reset = new Button(this);
+        reset.setText("↩️ إعادة");
+        reset.setTextSize(16);
+        reset.setTextColor(Color.WHITE);
+        reset.setAllCaps(false);
+
+        Runnable updateCounter = () -> {
+            counter.setText(
+                "التكرار: " + count[0] + " / " + target
+            );
+
+            if (count[0] >= target) {
+                counter.setText(
+                    "✅ اكتمل الذكر — " + target + " / " + target
+                );
+            }
+        };
+
+        updateCounter.run();
+
+        add.setOnClickListener(v -> {
+
+            if (count[0] < target) {
+                count[0]++;
+
+                prefs.edit()
+                    .putInt(key, count[0])
+                    .apply();
+
+                updateCounter.run();
+            }
+
+            if (count[0] >= target) {
+                add.setText("✅ مكتمل");
+            }
+        });
+
+        reset.setOnClickListener(v -> {
+            count[0] = 0;
+
+            prefs.edit()
+                .putInt(key, 0)
+                .apply();
+
+            add.setText("🔢 ذكرته");
+            updateCounter.run();
+        });
+
+        box.addView(text);
+        box.addView(counter);
+        box.addView(add);
+        box.addView(reset);
+
+        LinearLayout.LayoutParams lp =
+            new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            );
+
+        lp.setMargins(6,7,6,7);
+        box.setLayoutParams(lp);
+
+        content.addView(box);
     }
 
     void showHadith() {
