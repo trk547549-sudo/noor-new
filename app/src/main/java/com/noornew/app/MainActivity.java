@@ -547,7 +547,7 @@ LinearLayout root, content;
                             boolean visible =
                                 query.length() == 0 ||
                                 name.contains(query) ||
-                                String.valueOf(number).equals(query);
+                                false;
 
                             child.setVisibility(
                                 visible ? View.VISIBLE : View.GONE
