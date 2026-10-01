@@ -231,8 +231,6 @@ LinearLayout root, content;
         Button tasbeeh = btn2("📿 المسبحة", "سبح - أذكار - عدد");
         tasbeeh.setOnClickListener(v -> showTasbeeh());
 
-        Button morning = btn2("☀️ أذكار الصباح", "ابدأ يومك بذكر الله");
-        morning.setOnClickListener(v -> showDhikrCategory("🌅 أذكار الصباح"));
         addRow(a,tasbeeh);
         content.addView(morning);
 
@@ -249,8 +247,6 @@ LinearLayout root, content;
         qib.setOnClickListener(v ->
             Toast.makeText(this,"اتجاه القبلة قيد التطوير",Toast.LENGTH_SHORT).show());
 
-        Button evening = btn2("🌙 أذكار المساء", "اختم يومك بذكر الله");
-        evening.setOnClickListener(v -> showDhikrCategory("🌙 أذكار المساء"));
         addRow(qib,evening);
 
         Button namesBtn = btn2("✨ أسماء الله الحسنى", "تعرف على أسماء الله");
