@@ -2254,8 +2254,103 @@ void showTasbeeh() {
                 };
 
                 final String displayLocation = locationText;
+
+                // بيانات الصلاة القادمة
+                final String[] nextNames = {
+                    "الفجر", "الظهر", "العصر", "المغرب", "العشاء"
+                };
+
+                final String[] nextKeys = {
+                    "Fajr", "Dhuhr", "Asr", "Maghrib", "Isha"
+                };
             runOnUiThread(() -> {
                     content.removeAllViews();
+
+                    // الصلاة القادمة والعد التنازلي
+                    TextView nextPrayerView = title("⏳ الصلاة القادمة: حساب...", 20);
+                    nextPrayerView.setTextColor(Color.WHITE);
+                    nextPrayerView.setGravity(Gravity.CENTER);
+                    nextPrayerView.setPadding(15, 20, 15, 20);
+                    nextPrayerView.setBackground(
+                        cardBackground(Color.rgb(15,27,31), gold, 18)
+                    );
+                    content.addView(nextPrayerView);
+
+                    final android.os.Handler countdownHandler =
+                        new android.os.Handler(android.os.Looper.getMainLooper());
+
+                    final Runnable countdownRunnable = new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                Calendar now = Calendar.getInstance();
+                                Calendar target = null;
+                                String nextName = null;
+
+                                for (int i = 0; i < nextKeys.length; i++) {
+                                    String value = timings.optString(nextKeys[i]);
+                                    String[] parts = value.split(":");
+
+                                    Calendar candidate = Calendar.getInstance();
+                                    candidate.set(Calendar.HOUR_OF_DAY,
+                                        Integer.parseInt(parts[0]));
+                                    candidate.set(Calendar.MINUTE,
+                                        Integer.parseInt(parts[1]));
+                                    candidate.set(Calendar.SECOND, 0);
+                                    candidate.set(Calendar.MILLISECOND, 0);
+
+                                    if (candidate.after(now)) {
+                                        target = candidate;
+                                        nextName = nextNames[i];
+                                        break;
+                                    }
+                                }
+
+                                if (target == null) {
+                                    String value = timings.optString("Fajr");
+                                    String[] parts = value.split(":");
+
+                                    target = Calendar.getInstance();
+                                    target.set(Calendar.HOUR_OF_DAY,
+                                        Integer.parseInt(parts[0]));
+                                    target.set(Calendar.MINUTE,
+                                        Integer.parseInt(parts[1]));
+                                    target.set(Calendar.SECOND, 0);
+                                    target.set(Calendar.MILLISECOND, 0);
+                                    target.add(Calendar.DAY_OF_YEAR, 1);
+
+                                    nextName = "الفجر";
+                                }
+
+                                long diff =
+                                    target.getTimeInMillis()
+                                    - System.currentTimeMillis();
+
+                                long hours = diff / (1000 * 60 * 60);
+                                long minutes = (diff / (1000 * 60)) % 60;
+                                long seconds = (diff / 1000) % 60;
+
+                                nextPrayerView.setText(
+                                    "⏳ الصلاة القادمة: " + nextName +
+                                    "\nمتبقي: " +
+                                    String.format(
+                                        java.util.Locale.getDefault(),
+                                        "%02d:%02d:%02d",
+                                        hours, minutes, seconds
+                                    )
+                                );
+
+                                countdownHandler.postDelayed(this, 1000);
+
+                            } catch (Exception e) {
+                                nextPrayerView.setText(
+                                    "⏳ تعذر حساب الصلاة القادمة"
+                                );
+                            }
+                        }
+                    };
+
+                    countdownHandler.post(countdownRunnable);
 
                     // جدولة الأذان للصلوات الخمس
                     scheduleAdhan("الفجر", timings.optString("Fajr"));
