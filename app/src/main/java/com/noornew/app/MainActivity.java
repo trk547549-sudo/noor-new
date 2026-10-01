@@ -2131,6 +2131,31 @@ LinearLayout root, content;
         return new int[]{hDay, hMonth, hYear};
     }
 
+    JSONArray loadProphetStories() {
+        try {
+            java.io.InputStream input = getAssets().open("prophets_stories.json");
+            java.io.BufferedReader reader = new java.io.BufferedReader(
+                    new java.io.InputStreamReader(input, java.nio.charset.StandardCharsets.UTF_8)
+            );
+
+            StringBuilder json = new StringBuilder();
+            String line;
+
+            while ((line = reader.readLine()) != null) {
+                json.append(line);
+            }
+
+            reader.close();
+            input.close();
+
+            return new JSONArray(json.toString());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new JSONArray();
+        }
+    }
+
     void showProphets() {
         currentPage = "prophets";
         base("📚 قصص الأنبياء");
@@ -2143,99 +2168,32 @@ LinearLayout root, content;
         intro.setGravity(Gravity.CENTER);
         content.addView(intro);
 
-        String[][] stories = {
-            {"آدم عليه السلام",
-             "خلق الله آدم وأسجد له الملائكة، ثم تاب عليه بعد توبته.",
-             "البقرة 30-37 • طه 115-123"},
+        JSONArray storiesJson = loadProphetStories();
 
-            {"نوح عليه السلام",
-             "دعا قومه إلى عبادة الله، وصنع السفينة بأمر الله، فنجاه الله ومن معه من المؤمنين.",
-             "هود 25-49 • نوح 1-28"},
+        if (storiesJson.length() == 0) {
+            TextView error = title(
+                    "⚠️ تعذر تحميل قصص الأنبياء",
+                    18
+            );
+            error.setTextColor(Color.rgb(180, 40, 40));
+            error.setGravity(Gravity.CENTER);
+            content.addView(error);
+            return;
+        }
 
-            {"هود عليه السلام",
-             "دعا قوم عاد إلى توحيد الله وترك الشرك، فكذبوه فنجى الله هودًا والذين آمنوا معه.",
-             "الأعراف 65-72 • هود 50-60"},
+        String[][] stories = new String[storiesJson.length()][3];
 
-            {"صالح عليه السلام",
-             "دعا ثمود إلى عبادة الله، وجعل الله لهم الناقة آية، فكذبوا وعقروا الناقة.",
-             "الأعراف 73-79 • هود 61-68"},
+        try {
+            for (int i = 0; i < storiesJson.length(); i++) {
+                JSONObject obj = storiesJson.getJSONObject(i);
 
-            {"إبراهيم عليه السلام",
-             "دعا قومه إلى التوحيد، واحتج عليهم في أمر الأصنام، وجعل الله النار عليه بردًا وسلامًا.",
-             "الأنبياء 51-70"},
-
-            {"لوط عليه السلام",
-             "دعا قومه إلى ترك الفواحش والعودة إلى طاعة الله، فنجاه الله وأهلك المكذبين.",
-             "هود 77-83 • العنكبوت 28-35"},
-
-            {"إسماعيل عليه السلام",
-             "وصفه الله بالصبر وصدق الوعد، وذكره مع أهل بيته في عبادتهم لله.",
-             "مريم 54-55 • البقرة 125-129"},
-
-            {"إسحاق عليه السلام",
-             "بشر الله إبراهيم وسارة بإسحاق، وذكره من الصالحين المباركين.",
-             "هود 71-73 • الصافات 112-113"},
-
-            {"يعقوب عليه السلام",
-             "ابتلي بفقد يوسف فصبر، وأوصى أبناءه بالتوحيد، ثم جمع الله بينه وبين يوسف.",
-             "يوسف 18 • يوسف 83-101"},
-
-            {"يوسف عليه السلام",
-             "رأى رؤيا، ومر بابتلاءات متعددة، ثم مكن الله له في الأرض وجمعه بأهله.",
-             "سورة يوسف 1-101"},
-
-            {"شعيب عليه السلام",
-             "دعا قومه إلى عبادة الله وإيفاء الكيل والميزان وعدم الفساد في الأرض.",
-             "الأعراف 85-93 • هود 84-95"},
-
-            {"أيوب عليه السلام",
-             "ابتلاه الله فصبر، ودعا ربه، فكشف الله عنه الضر ورد عليه نعمته.",
-             "الأنبياء 83-84 • ص 41-44"},
-
-            {"موسى عليه السلام",
-             "أرسله الله إلى فرعون، وأيده بآياته، ونجى به بني إسرائيل من فرعون.",
-             "طه 9-79 • الشعراء 10-68"},
-
-            {"هارون عليه السلام",
-             "كان أخا موسى وسانده في دعوة فرعون، ودعا بني إسرائيل إلى طاعة الله.",
-             "طه 29-36 • طه 90-94"},
-
-            {"داود عليه السلام",
-             "آتاه الله الملك والحكمة، وأنزل عليه الزبور، وذكره بالصبر والعبادة.",
-             "ص 17-26 • النساء 163"},
-
-            {"سليمان عليه السلام",
-             "آتاه الله الملك والحكمة، وسخر له من خلقه، وذكر القرآن قصته مع ملكة سبأ.",
-             "النمل 15-44 • ص 30-40"},
-
-            {"إلياس عليه السلام",
-             "دعا قومه إلى عبادة الله وترك عبادة بعل.",
-             "الصافات 123-132"},
-
-            {"اليسع عليه السلام",
-             "ذكره الله مع عدد من الأنبياء ووصفه من الأخيار.",
-             "الأنعام 86 • ص 48"},
-
-            {"يونس عليه السلام",
-             "دعا ربه وهو في شدة، فاستجاب الله له ونجاه من الغم.",
-             "الأنبياء 87-88 • الصافات 139-148"},
-
-            {"زكريا عليه السلام",
-             "دعا ربه سرًا، فبشره الله بيحيى.",
-             "مريم 2-15 • آل عمران 37-41"},
-
-            {"يحيى عليه السلام",
-             "آتاه الله الحكم صبيًا، ووصفه بالبر والتقوى والصلاح.",
-             "مريم 12-15 • آل عمران 39"},
-
-            {"عيسى عليه السلام",
-             "ولد من مريم بمعجزة، وأيده الله بالآيات، ودعا بني إسرائيل إلى عبادة الله.",
-             "آل عمران 45-55 • مريم 16-36"},
-
-            {"محمد ﷺ",
-             "خاتم النبيين، أرسله الله بالهدى ودين الحق، وبلغ الرسالة ودعا إلى عبادة الله.",
-             "الأحزاب 40 • الفتح 29 • الأنبياء 107"}
-        };
+                stories[i][0] = obj.optString("name", "نبي");
+                stories[i][1] = obj.optString("story", "");
+                stories[i][2] = obj.optString("sources", "");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         EditText search = new EditText(this);
         search.setHint("🔎 ابحث عن نبي");
@@ -2358,21 +2316,29 @@ LinearLayout root, content;
         currentPage = "prophet_story";
         base("📖 " + name);
 
+        TextView heading = title(
+            "🌙 " + name,
+            26
+        );
+        heading.setTextColor(gold);
+        heading.setGravity(Gravity.CENTER);
+        heading.setPadding(10, 15, 10, 20);
+        content.addView(heading);
+
         TextView text = new TextView(this);
 
         text.setText(
-            "🌙 " + name +
-            "\n\n" +
             story +
-            "\n\n📖 المصدر:\n" +
+            "\n\n━━━━━━━━━━━━━━━━━━━━\n\n" +
+            "📚 المصادر:\n" +
             source
         );
 
-        text.setTextColor(Color.WHITE);
+        text.setTextColor(Color.rgb(35, 35, 35));
         text.setTextSize(20);
         text.setGravity(Gravity.RIGHT);
-        text.setPadding(25,30,25,30);
-        text.setLineSpacing(8,1.15f);
+        text.setPadding(25, 25, 25, 25);
+        text.setLineSpacing(10, 1.18f);
 
         content.addView(text);
 
@@ -2386,14 +2352,13 @@ LinearLayout root, content;
 
         Button fav = btn(
             saved
-            ? "⭐ إزالة من المفضلة"
-            : "☆ إضافة للمفضلة"
+                ? "⭐ إزالة من المفضلة"
+                : "☆ إضافة للمفضلة"
         );
 
         content.addView(fav);
 
         fav.setOnClickListener(v -> {
-
             boolean now =
                 !pref.getBoolean(name, false);
 
@@ -2403,8 +2368,8 @@ LinearLayout root, content;
 
             fav.setText(
                 now
-                ? "⭐ إزالة من المفضلة"
-                : "☆ إضافة للمفضلة"
+                    ? "⭐ إزالة من المفضلة"
+                    : "☆ إضافة للمفضلة"
             );
         });
 
@@ -2412,7 +2377,6 @@ LinearLayout root, content;
         content.addView(copy);
 
         copy.setOnClickListener(v -> {
-
             android.content.ClipboardManager clipboard =
                 (android.content.ClipboardManager)
                 getSystemService(CLIPBOARD_SERVICE);
@@ -2426,7 +2390,7 @@ LinearLayout root, content;
 
             Toast.makeText(
                 this,
-                "تم نسخ القصة",
+                "تم نسخ القصة والمصادر",
                 Toast.LENGTH_SHORT
             ).show();
         });
@@ -2435,7 +2399,6 @@ LinearLayout root, content;
         content.addView(share);
 
         share.setOnClickListener(v -> {
-
             Intent intent =
                 new Intent(Intent.ACTION_SEND);
 
@@ -2449,7 +2412,7 @@ LinearLayout root, content;
             startActivity(
                 Intent.createChooser(
                     intent,
-                    "مشاركة القصة"
+                    "مشاركة قصة " + name
                 )
             );
         });
