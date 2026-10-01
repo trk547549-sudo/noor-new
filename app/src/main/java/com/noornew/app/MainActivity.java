@@ -232,7 +232,6 @@ LinearLayout root, content;
         tasbeeh.setOnClickListener(v -> showTasbeeh());
 
         addRow(a,tasbeeh);
-        content.addView(morning);
 
         section("✦ خدمات نور الهدى ✦");
 
@@ -247,7 +246,6 @@ LinearLayout root, content;
         qib.setOnClickListener(v ->
             Toast.makeText(this,"اتجاه القبلة قيد التطوير",Toast.LENGTH_SHORT).show());
 
-        addRow(qib,evening);
 
         Button namesBtn = btn2("✨ أسماء الله الحسنى", "تعرف على أسماء الله");
         namesBtn.setOnClickListener(v -> showNames());
