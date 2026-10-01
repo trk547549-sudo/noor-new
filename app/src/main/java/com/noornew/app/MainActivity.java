@@ -263,7 +263,7 @@ LinearLayout root, content;
 
         Button dailyDua = btn2("\uD83E\uDD32 الدعاء اليومي", "دعاء جديد كل يوم");
         dailyDua.setOnClickListener(v -> showDailyDua());
-        addRow(dailyDua, settings);
+        content.addView(dailyDua);
 
         section("✦ التطبيق ✦");
 
