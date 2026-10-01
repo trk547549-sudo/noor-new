@@ -261,6 +261,10 @@ LinearLayout root, content;
         hijri.setOnClickListener(v -> showHijriCalendar());
         addRow(prophets,hijri);
 
+        Button dailyDua = btn2("\uD83E\uDD32 الدعاء اليومي", "دعاء جديد كل يوم");
+        dailyDua.setOnClickListener(v -> showDailyDua());
+        addRow(dailyDua, settings);
+
         section("✦ التطبيق ✦");
 
         Button settings = btn2("⚙️ الإعدادات", "تحكم في تجربتك");
@@ -1329,6 +1333,111 @@ LinearLayout root, content;
                 ) {}
             }
         );
+    }
+
+    void showDailyDua() {
+        currentPage = "daily_dua";
+        base("🤲 الدعاء اليومي");
+
+        TextView intro = title("🌙 دعاء اليوم", 24);
+        intro.setGravity(Gravity.CENTER);
+        content.addView(intro);
+
+        final String[][] duas = {
+            {"اللهم إنك عفو تحب العفو فاعف عني.", "دعاء جامع للعفو والمغفرة"},
+            {"ربنا آتنا في الدنيا حسنة وفي الآخرة حسنة وقنا عذاب النار.", "سورة البقرة: 201"},
+            {"رب اشرح لي صدري ويسر لي أمري.", "سورة طه: 25-26"},
+            {"رب زدني علمًا.", "سورة طه: 114"},
+            {"رب اغفر لي ولوالدي وللمؤمنين يوم يقوم الحساب.", "سورة إبراهيم: 41"},
+            {"حسبي الله لا إله إلا هو عليه توكلت وهو رب العرش العظيم.", "سورة التوبة: 129"},
+            {"لا إله إلا أنت سبحانك إني كنت من الظالمين.", "دعاء يونس عليه السلام"},
+            {"ربنا لا تزغ قلوبنا بعد إذ هديتنا وهب لنا من لدنك رحمة إنك أنت الوهاب.", "سورة آل عمران: 8"},
+            {"ربنا ظلمنا أنفسنا وإن لم تغفر لنا وترحمنا لنكونن من الخاسرين.", "سورة الأعراف: 23"},
+            {"اللهم أعني على ذكرك وشكرك وحسن عبادتك.", "دعاء مأثور"},
+            {"اللهم إني أسألك الهدى والتقى والعفاف والغنى.", "دعاء مأثور"},
+            {"رب إني لما أنزلت إلي من خير فقير.", "سورة القصص: 24"},
+            {"رب هب لي من لدنك ذرية طيبة إنك سميع الدعاء.", "سورة آل عمران: 38"},
+            {"اللهم اغفر لي وارحمني واهدني وعافني وارزقني.", "دعاء مأثور"},
+            {"اللهم إني أسألك علمًا نافعًا ورزقًا طيبًا وعملًا متقبلًا.", "دعاء مأثور"},
+            {"ربنا تقبل منا إنك أنت السميع العليم.", "سورة البقرة: 127"},
+            {"رب اجعلني مقيم الصلاة ومن ذريتي ربنا وتقبل دعاء.", "سورة إبراهيم: 40"},
+            {"اللهم إني أسألك العفو والعافية في الدنيا والآخرة.", "دعاء مأثور"},
+            {"اللهم أصلح لي شأني كله ولا تكلني إلى نفسي طرفة عين.", "دعاء مأثور"},
+            {"يا مقلب القلوب ثبت قلبي على دينك.", "دعاء مأثور"},
+            {"اللهم إني أعوذ بك من الهم والحزن والعجز والكسل.", "دعاء مأثور"},
+            {"ربنا هب لنا من أزواجنا وذرياتنا قرة أعين واجعلنا للمتقين إمامًا.", "سورة الفرقان: 74"},
+            {"رب اغفر وارحم وأنت خير الراحمين.", "سورة المؤمنون: 118"},
+            {"اللهم بارك لنا فيما رزقتنا وقنا عذاب النار.", "دعاء مأثور"},
+            {"اللهم اهدني وسددني.", "دعاء مأثور"},
+            {"اللهم ارزقني قلبًا مطمئنًا ولسانًا ذاكرًا وعملًا صالحًا.", "دعاء مأثور"}
+        };
+
+        Calendar cal = Calendar.getInstance();
+        int index = (cal.get(Calendar.DAY_OF_YEAR) - 1) % duas.length;
+
+        TextView day = title(
+                "📅 دعاء اليوم — " + cal.get(Calendar.DAY_OF_YEAR),
+                18
+        );
+        day.setGravity(Gravity.CENTER);
+        content.addView(day);
+
+        LinearLayout card = new LinearLayout(this);
+        card.setOrientation(LinearLayout.VERTICAL);
+        card.setPadding(28, 28, 28, 28);
+
+        TextView dua = title("🤲 " + duas[index][0], 23);
+        dua.setGravity(Gravity.CENTER);
+        dua.setTextIsSelectable(true);
+        card.addView(dua);
+
+        TextView source = title("📖 " + duas[index][1], 16);
+        source.setGravity(Gravity.CENTER);
+        card.addView(source);
+
+        content.addView(card);
+
+        Button another = btn2("🔄 دعاء آخر", "عرض دعاء مختلف");
+        another.setOnClickListener(v -> {
+            int next = (index + 1) % duas.length;
+            showDailyDuaByIndex(duas, next);
+        });
+        content.addView(another);
+
+        Button copy = btn2("📋 نسخ الدعاء", "انسخ دعاء اليوم");
+        copy.setOnClickListener(v -> {
+            android.content.ClipboardManager clipboard =
+                    (android.content.ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+            clipboard.setPrimaryClip(
+                    android.content.ClipData.newPlainText("الدعاء اليومي", duas[index][0])
+            );
+            Toast.makeText(this, "تم نسخ الدعاء ✅", Toast.LENGTH_SHORT).show();
+        });
+        content.addView(copy);
+    }
+
+    void showDailyDuaByIndex(String[][] duas, int index) {
+        currentPage = "daily_dua";
+        base("🤲 الدعاء اليومي");
+
+        TextView intro = title("🌙 دعاء مختار", 24);
+        intro.setGravity(Gravity.CENTER);
+        content.addView(intro);
+
+        TextView dua = title("🤲 " + duas[index][0], 23);
+        dua.setGravity(Gravity.CENTER);
+        dua.setTextIsSelectable(true);
+        content.addView(dua);
+
+        TextView source = title("📖 " + duas[index][1], 16);
+        source.setGravity(Gravity.CENTER);
+        content.addView(source);
+
+        Button another = btn2("🔄 دعاء آخر", "عرض دعاء مختلف");
+        another.setOnClickListener(v ->
+                showDailyDuaByIndex(duas, (index + 1) % duas.length)
+        );
+        content.addView(another);
     }
 
     void showAdhkar() {
