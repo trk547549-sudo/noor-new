@@ -271,17 +271,28 @@ LinearLayout root, content;
         settings.setOnClickListener(v -> showSettings());
 
         Button about = btn2("ℹ️ حول التطبيق", "نور الهدى");
-        about.setOnClickListener(v ->
+        about.setOnClickListener(v -> {
+            TextView info = new TextView(this);
+            info.setText(
+                "تطبيق إسلامي شامل\\n\\n" +
+                "مطور التطبيق:\\n" +
+                "علاء العمراني\\n" +
+                "ala alamrany\\n\\n" +
+                "📧 hamdalmrany833@gmail.com"
+            );
+            info.setTextSize(18);
+            info.setGravity(Gravity.CENTER);
+            info.setPadding(40, 20, 40, 20);
+            info.setAutoLinkMask(android.text.util.Linkify.EMAIL_ADDRESSES);
+            info.setLinksClickable(true);
+            info.setMovementMethod(android.text.method.LinkMovementMethod.getInstance());
+
             new AlertDialog.Builder(this)
                 .setTitle("🌙 نور الهدى")
-                .setMessage(
-                    "تطبيق إسلامي شامل\n\n" +
-                    "مطور التطبيق:\n" +
-                    "علاء العمراني\n" +
-                    "ala alamrany"
-                )
-                .setPositiveButton("حسنًا",null)
-                .show());
+                .setView(info)
+                .setPositiveButton("حسنًا", null)
+                .show();
+        });
 
         addRow(settings,about);
     }
