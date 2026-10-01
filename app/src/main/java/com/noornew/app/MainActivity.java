@@ -258,8 +258,7 @@ LinearLayout root, content;
         prophets.setOnClickListener(v -> showProphets());
 
         Button hijri = btn2("📅 التاريخ الهجري", "اعرف تاريخك الهجري");
-        hijri.setOnClickListener(v ->
-            Toast.makeText(this,"التاريخ الهجري قيد التطوير",Toast.LENGTH_SHORT).show());
+        hijri.setOnClickListener(v -> showHijriCalendar());
         addRow(prophets,hijri);
 
         section("✦ التطبيق ✦");
@@ -1925,6 +1924,91 @@ LinearLayout root, content;
 
             content.addView(card);
         }
+    }
+
+    void showHijriCalendar() {
+        currentPage = "hijri";
+        base("📅 التقويم الهجري");
+
+        Calendar now = Calendar.getInstance();
+
+        int day = now.get(Calendar.DAY_OF_MONTH);
+        int month = now.get(Calendar.MONTH) + 1;
+        int year = now.get(Calendar.YEAR);
+
+        int hour = now.get(Calendar.HOUR_OF_DAY);
+        int minute = now.get(Calendar.MINUTE);
+
+        String[] gregorianMonths = {
+            "يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو",
+            "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"
+        };
+
+        String gregorianDate =
+            day + " " + gregorianMonths[month - 1] + " " + year;
+
+        int[] hijri = gregorianToHijri(day, month, year);
+
+        String[] hijriMonths = {
+            "محرم", "صفر", "ربيع الأول", "ربيع الآخر",
+            "جمادى الأولى", "جمادى الآخرة", "رجب", "شعبان",
+            "رمضان", "شوال", "ذو القعدة", "ذو الحجة"
+        };
+
+        String hijriDate =
+            hijri[0] + " " + hijriMonths[hijri[1] - 1] + " " + hijri[2] + " هـ";
+
+        TextView titleView = title("🌙 التاريخ الهجري", 26);
+        titleView.setGravity(Gravity.CENTER);
+        content.addView(titleView);
+
+        TextView phoneInfo = title(
+            "📱 التاريخ حسب الهاتف\\n" +
+            "📅 " + gregorianDate + "\\n" +
+            String.format(Locale.getDefault(), "⏰ %02d:%02d", hour, minute),
+            20
+        );
+        phoneInfo.setGravity(Gravity.CENTER);
+        content.addView(phoneInfo);
+
+        TextView hijriView = title(
+            "🕌 " + hijriDate,
+            25
+        );
+        hijriView.setGravity(Gravity.CENTER);
+        content.addView(hijriView);
+
+        TextView note = title(
+            "🔄 يتم أخذ التاريخ والوقت من جهازك مباشرة عند فتح هذه الصفحة.",
+            16
+        );
+        note.setGravity(Gravity.CENTER);
+        content.addView(note);
+    }
+
+    int[] gregorianToHijri(int day, int month, int year) {
+        int a = (14 - month) / 12;
+        int y = year + 4800 - a;
+        int m = month + 12 * a - 3;
+
+        int jd = day + (153 * m + 2) / 5 + 365 * y
+                + y / 4 - y / 100 + y / 400 - 32045;
+
+        int l = jd - 1948440 + 10632;
+        int n = (l - 1) / 10631;
+        l = l - 10631 * n + 354;
+
+        int j = ((10985 - l) / 5316) * ((50 * l) / 17719)
+                + (l / 5670) * ((43 * l) / 15238);
+
+        l = l - ((30 - j) / 15) * ((17719 * j) / 50)
+                - (j / 16) * ((15238 * j) / 43) + 29;
+
+        int hMonth = (24 * l) / 709;
+        int hDay = l - (709 * hMonth) / 24;
+        int hYear = 30 * n + j - 30;
+
+        return new int[]{hDay, hMonth, hYear};
     }
 
     void showProphets() {
