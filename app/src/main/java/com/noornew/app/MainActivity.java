@@ -2135,7 +2135,6 @@ LinearLayout root, content;
         currentPage = "prophets";
         base("📚 قصص الأنبياء");
 
-
         TextView intro = title(
             "قصص مختصرة مستندة إلى ما ورد في القرآن الكريم",
             18
@@ -2238,28 +2237,222 @@ LinearLayout root, content;
              "الأحزاب 40 • الفتح 29 • الأنبياء 107"}
         };
 
+        EditText search = new EditText(this);
+        search.setHint("🔎 ابحث عن نبي");
+        search.setTextSize(17);
+        search.setSingleLine(true);
+        content.addView(search);
+
+        Button favorites = btn("⭐ المفضلة");
+        content.addView(favorites);
+
+        LinearLayout list = new LinearLayout(this);
+        list.setOrientation(LinearLayout.VERTICAL);
+        content.addView(list);
+
         for (String[] story : stories) {
             TextView card = new TextView(this);
+
             card.setText(
-                "🌙  " + story[0] +
+                "🌙 " + story[0] +
                 "\n\n" + story[1] +
-                "\n\n📖 " + story[2]
+                "\n\n📖 " + story[2] +
+                "\n\nاضغط لفتح القصة"
             );
+
             card.setTextColor(Color.WHITE);
             card.setTextSize(17);
             card.setGravity(Gravity.RIGHT);
             card.setPadding(20,22,20,22);
             card.setBackground(
-                cardBackground(Color.rgb(15,27,31),gold,18)
+                cardBackground(
+                    Color.rgb(15,27,31),
+                    gold,
+                    18
+                )
             );
 
             LinearLayout.LayoutParams lp =
                 new LinearLayout.LayoutParams(-1,-2);
+
             lp.setMargins(5,7,5,7);
             card.setLayoutParams(lp);
 
-            content.addView(card);
+            card.setOnClickListener(v ->
+                showProphetStory(
+                    story[0],
+                    story[1],
+                    story[2]
+                )
+            );
+
+            list.addView(card);
         }
+
+        search.addTextChangedListener(
+            new android.text.TextWatcher() {
+
+                public void beforeTextChanged(
+                    CharSequence s, int start,
+                    int count, int after) {}
+
+                public void onTextChanged(
+                    CharSequence s, int start,
+                    int before, int count) {
+
+                    String q = s.toString().trim();
+
+                    for (int i = 0; i < list.getChildCount(); i++) {
+                        View item = list.getChildAt(i);
+
+                        String name = stories[i][0];
+
+                        item.setVisibility(
+                            q.isEmpty() || name.contains(q)
+                            ? View.VISIBLE
+                            : View.GONE
+                        );
+                    }
+                }
+
+                public void afterTextChanged(
+                    android.text.Editable e) {}
+            }
+        );
+
+        favorites.setOnClickListener(v -> {
+
+            StringBuilder text = new StringBuilder();
+
+            android.content.SharedPreferences pref =
+                getSharedPreferences(
+                    "noor_prophet_favorites",
+                    MODE_PRIVATE
+                );
+
+            for (String[] story : stories) {
+                if (pref.getBoolean(story[0], false)) {
+                    text.append("⭐ ")
+                        .append(story[0])
+                        .append("\n\n");
+                }
+            }
+
+            if (text.length() == 0) {
+                text.append("لا توجد قصص مفضلة بعد.");
+            }
+
+            new AlertDialog.Builder(this)
+                .setTitle("⭐ قصصك المفضلة")
+                .setMessage(text.toString())
+                .setPositiveButton("حسنًا", null)
+                .show();
+        });
+    }
+
+    void showProphetStory(
+        String name,
+        String story,
+        String source
+    ) {
+        currentPage = "prophet_story";
+        base("📖 " + name);
+
+        TextView text = new TextView(this);
+
+        text.setText(
+            "🌙 " + name +
+            "\n\n" +
+            story +
+            "\n\n📖 المصدر:\n" +
+            source
+        );
+
+        text.setTextColor(Color.WHITE);
+        text.setTextSize(20);
+        text.setGravity(Gravity.RIGHT);
+        text.setPadding(25,30,25,30);
+        text.setLineSpacing(8,1.15f);
+
+        content.addView(text);
+
+        android.content.SharedPreferences pref =
+            getSharedPreferences(
+                "noor_prophet_favorites",
+                MODE_PRIVATE
+            );
+
+        boolean saved = pref.getBoolean(name, false);
+
+        Button fav = btn(
+            saved
+            ? "⭐ إزالة من المفضلة"
+            : "☆ إضافة للمفضلة"
+        );
+
+        content.addView(fav);
+
+        fav.setOnClickListener(v -> {
+
+            boolean now =
+                !pref.getBoolean(name, false);
+
+            pref.edit()
+                .putBoolean(name, now)
+                .apply();
+
+            fav.setText(
+                now
+                ? "⭐ إزالة من المفضلة"
+                : "☆ إضافة للمفضلة"
+            );
+        });
+
+        Button copy = btn("📋 نسخ القصة");
+        content.addView(copy);
+
+        copy.setOnClickListener(v -> {
+
+            android.content.ClipboardManager clipboard =
+                (android.content.ClipboardManager)
+                getSystemService(CLIPBOARD_SERVICE);
+
+            clipboard.setPrimaryClip(
+                android.content.ClipData.newPlainText(
+                    name,
+                    text.getText().toString()
+                )
+            );
+
+            Toast.makeText(
+                this,
+                "تم نسخ القصة",
+                Toast.LENGTH_SHORT
+            ).show();
+        });
+
+        Button share = btn("📤 مشاركة القصة");
+        content.addView(share);
+
+        share.setOnClickListener(v -> {
+
+            Intent intent =
+                new Intent(Intent.ACTION_SEND);
+
+            intent.setType("text/plain");
+
+            intent.putExtra(
+                Intent.EXTRA_TEXT,
+                text.getText().toString()
+            );
+
+            startActivity(
+                Intent.createChooser(
+                    intent,
+                    "مشاركة القصة"
+                )
+            );
+        });
     }
 
 void showTasbeeh() {
