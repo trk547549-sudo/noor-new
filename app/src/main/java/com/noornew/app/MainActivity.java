@@ -1190,6 +1190,7 @@ LinearLayout root, content;
         }
 
         final int totalVerseCount = verses.size();
+        final int selectedSurahNumber = surahNumber;
 
         if (totalVerseCount == 0) {
             TextView error = title(
@@ -1315,7 +1316,7 @@ LinearLayout root, content;
                     new StringBuilder();
 
                 boolean showBasmala =
-                    surahNumber != 9;
+                    selectedSurahNumber != 9;
 
                 if (showBasmala) {
                     String firstVerse =
