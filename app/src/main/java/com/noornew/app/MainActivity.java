@@ -1867,12 +1867,9 @@ LinearLayout root, content;
                 MODE_PRIVATE
             );
 
-        String key =
-            "count_" + category + "_" + dhikr;
+        String key = "count_" + category + "_" + dhikr;
 
-        int[] count = {
-            prefs.getInt(key, 0)
-        };
+        int[] count = { prefs.getInt(key, 0) };
 
         LinearLayout box = new LinearLayout(this);
         box.setOrientation(LinearLayout.VERTICAL);
@@ -1888,11 +1885,7 @@ LinearLayout root, content;
         );
 
         TextView text = new TextView(this);
-
-        text.setText(
-            "✦ " + dhikr
-        );
-
+        text.setText("✦ " + dhikr);
         text.setTextColor(Color.WHITE);
         text.setTextSize(20);
         text.setGravity(Gravity.RIGHT);
@@ -1902,11 +1895,7 @@ LinearLayout root, content;
         text.setPadding(10,10,10,15);
 
         TextView sourceView = new TextView(this);
-
-        sourceView.setText(
-            "📚 " + source
-        );
-
+        sourceView.setText("📚 " + source);
         sourceView.setTextColor(gold);
         sourceView.setTextSize(14);
         sourceView.setGravity(Gravity.RIGHT);
@@ -1915,14 +1904,19 @@ LinearLayout root, content;
         sourceView.setPadding(10,5,10,10);
 
         TextView counter = new TextView(this);
-
         counter.setTextSize(18);
         counter.setTextColor(gold);
         counter.setGravity(Gravity.CENTER);
         counter.setTextDirection(View.TEXT_DIRECTION_RTL);
 
-        Button add = new Button(this);
+        TextView remaining = new TextView(this);
+        remaining.setTextSize(15);
+        remaining.setTextColor(Color.LTGRAY);
+        remaining.setGravity(Gravity.CENTER);
+        remaining.setTextDirection(View.TEXT_DIRECTION_RTL);
+        remaining.setPadding(5,3,5,8);
 
+        Button add = new Button(this);
         add.setText("🔢 ذكرته");
         add.setTextSize(18);
         add.setTextColor(Color.WHITE);
@@ -1930,7 +1924,6 @@ LinearLayout root, content;
         add.setMinHeight(60);
 
         Button reset = new Button(this);
-
         reset.setText("↩️ إعادة");
         reset.setTextSize(16);
         reset.setTextColor(Color.WHITE);
@@ -1940,20 +1933,32 @@ LinearLayout root, content;
 
             if (count[0] >= target) {
 
+                count[0] = target;
+
                 counter.setText(
                     "✅ مكتمل — " +
                     target + " / " + target
+                );
+
+                remaining.setText(
+                    "🌟 أحسنت، أتممت هذا الذكر"
                 );
 
                 add.setText("✅ مكتمل");
 
             } else {
 
+                int left = target - count[0];
+
                 counter.setText(
                     "التكرار: " +
                     count[0] +
                     " / " +
                     target
+                );
+
+                remaining.setText(
+                    "باقي: " + left
                 );
 
                 add.setText("🔢 ذكرته");
@@ -1990,6 +1995,7 @@ LinearLayout root, content;
         box.addView(text);
         box.addView(sourceView);
         box.addView(counter);
+        box.addView(remaining);
         box.addView(add);
         box.addView(reset);
 
@@ -2780,10 +2786,27 @@ void showTasbeeh() {
                     }
 
                     TextView info =
-                        title(displayLocation,16);
+                        title(
+                            displayLocation +
+                            "\n🕰️ المواقيت حسب توقيت جهازك",
+                            16
+                        );
 
                     info.setTextColor(Color.LTGRAY);
+                    info.setGravity(Gravity.CENTER);
+                    info.setPadding(10,18,10,10);
                     content.addView(info);
+
+                    TextView note =
+                        title(
+                            "ℹ️ الشروق وقت مهم، لكنه ليس وقت أذان.",
+                            14
+                        );
+
+                    note.setTextColor(Color.GRAY);
+                    note.setGravity(Gravity.CENTER);
+                    note.setPadding(10,5,10,15);
+                    content.addView(note);
                 });
 
             } catch (Exception e) {
