@@ -1075,59 +1075,45 @@ LinearLayout root, content;
             }
         }
 
-        base("سورة " + name);
+        base("");
 
-        TextView heading = title("۞ سورة " + name + " ۞", 25);
-        heading.setTextColor(Color.rgb(235, 205, 120));
-        heading.setGravity(Gravity.CENTER);
-        heading.setTextDirection(View.TEXT_DIRECTION_RTL);
-        content.addView(heading);
+        content.setBackgroundColor(Color.WHITE);
+        content.setPadding(0, 0, 0, 0);
 
-        TextView info = title(
-            "القرآن الكريم  •  السورة رقم " + surahNumber,
-            15
-        );
-        info.setTextColor(Color.LTGRAY);
-        info.setGravity(Gravity.CENTER);
-        info.setTextDirection(View.TEXT_DIRECTION_RTL);
-        content.addView(info);
+        final int selectedSurahNumber = surahNumber;
 
-        Button favoriteSurah = btn("🔖 حفظ السورة في المفضلة");
-        favoriteSurah.setOnClickListener(v -> {
-            android.content.SharedPreferences pref =
-                getSharedPreferences("noor_favorites", MODE_PRIVATE);
+        TextView page = new TextView(this);
 
-            pref.edit()
-                .putBoolean("surah_" + name, true)
-                .apply();
+        page.setTextSize(22);
+        page.setTextColor(Color.rgb(25, 25, 25));
+        page.setGravity(Gravity.RIGHT | Gravity.TOP);
+        page.setTextDirection(View.TEXT_DIRECTION_RTL);
+        page.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_END);
+        page.setIncludeFontPadding(true);
+        page.setLineSpacing(10, 1.18f);
+        page.setPadding(24, 28, 24, 28);
 
-            android.widget.Toast.makeText(
-                this,
-                "⭐ تمت إضافة سورة " + name + " إلى المفضلة",
-                android.widget.Toast.LENGTH_SHORT
-            ).show();
-        });
-        content.addView(favoriteSurah);
+        page.setBackgroundColor(Color.rgb(255, 253, 247));
 
-        EditText search = new EditText(this);
-        search.setHint("🔎 ابحث داخل السورة...");
-        search.setTextSize(16);
-        search.setSingleLine(true);
-        search.setGravity(Gravity.RIGHT | Gravity.CENTER_VERTICAL);
-        search.setTextDirection(View.TEXT_DIRECTION_RTL);
-        search.setHintTextColor(Color.GRAY);
-        search.setTextColor(Color.DKGRAY);
-        search.setPadding(20, 15, 20, 15);
-        search.setBackground(
-            cardBackground(Color.WHITE, gold, 18)
-        );
-        content.addView(search);
+        LinearLayout.LayoutParams pageParams =
+            new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT
+            );
 
-        TextView resultInfo = title("", 14);
-        resultInfo.setTextColor(Color.LTGRAY);
-        resultInfo.setGravity(Gravity.RIGHT);
-        resultInfo.setTextDirection(View.TEXT_DIRECTION_RTL);
-        content.addView(resultInfo);
+        page.setLayoutParams(pageParams);
+
+        content.addView(page);
+
+        TextView pageNumber = new TextView(this);
+
+        pageNumber.setTextSize(13);
+        pageNumber.setTextColor(Color.rgb(110, 90, 50));
+        pageNumber.setGravity(Gravity.CENTER);
+        pageNumber.setTextDirection(View.TEXT_DIRECTION_RTL);
+        pageNumber.setPadding(0, 4, 0, 8);
+
+        content.addView(pageNumber);
 
         final java.util.ArrayList<String> verses =
             new java.util.ArrayList<>();
@@ -1175,7 +1161,7 @@ LinearLayout root, content;
                     continue;
                 }
 
-                if (fileSurah == surahNumber) {
+                if (fileSurah == selectedSurahNumber) {
                     verses.add(parts[2].trim());
                     verseNumbers.add(fileVerse);
                 }
@@ -1184,221 +1170,232 @@ LinearLayout root, content;
             reader.close();
 
         } catch (Exception e) {
-            resultInfo.setText(
+            page.setText(
                 "تعذر قراءة آيات هذه السورة."
             );
-        }
-
-        final int totalVerseCount = verses.size();
-        final int selectedSurahNumber = surahNumber;
-
-        if (totalVerseCount == 0) {
-            TextView error = title(
-                "لم يتم العثور على آيات هذه السورة في ملف القرآن.",
-                18
-            );
-            error.setTextColor(Color.LTGRAY);
-            error.setGravity(Gravity.CENTER);
-            error.setTextDirection(View.TEXT_DIRECTION_RTL);
-            content.addView(error);
             return;
         }
 
-        final int versesPerPage = 8;
-        final int totalPages =
-            (totalVerseCount + versesPerPage - 1)
-            / versesPerPage;
+        final int totalVerseCount = verses.size();
 
+        if (totalVerseCount == 0) {
+            page.setText(
+                "لم يتم العثور على آيات هذه السورة."
+            );
+            return;
+        }
+
+        final java.util.ArrayList<String> pages =
+            new java.util.ArrayList<>();
+
+        final int charsPerPage = 720;
+
+        StringBuilder current =
+            new StringBuilder();
+
+        for (int i = 0; i < verses.size(); i++) {
+
+            String verse =
+                verses.get(i) +
+                "  ﴿" +
+                verseNumbers.get(i) +
+                "﴾";
+
+            if (current.length() > 0 &&
+                current.length() + verse.length() + 2
+                    > charsPerPage) {
+
+                pages.add(current.toString());
+                current.setLength(0);
+            }
+
+            if (current.length() > 0) {
+                current.append("  ");
+            }
+
+            current.append(verse);
+        }
+
+        if (current.length() > 0) {
+            pages.add(current.toString());
+        }
+
+        final int totalPages = pages.size();
         final int[] currentPageNumber = {0};
 
-        TextView pageLabel = title("", 15);
-        pageLabel.setTextColor(Color.rgb(235, 205, 120));
-        pageLabel.setGravity(Gravity.CENTER);
-        pageLabel.setTextDirection(View.TEXT_DIRECTION_RTL);
-        content.addView(pageLabel);
-
-        TextView quranText = new TextView(this);
-
-        quranText.setTextSize(23);
-        quranText.setTextColor(Color.rgb(55, 45, 30));
-        quranText.setGravity(
-            Gravity.RIGHT | Gravity.CENTER_VERTICAL
-        );
-        quranText.setTextDirection(View.TEXT_DIRECTION_RTL);
-        quranText.setTextAlignment(
-            View.TEXT_ALIGNMENT_VIEW_END
-        );
-        quranText.setLineSpacing(16, 1.22f);
-        quranText.setIncludeFontPadding(true);
-        quranText.setPadding(24, 45, 24, 45);
-
-        quranText.setBackground(
-            cardBackground(
-                Color.rgb(250, 246, 232),
-                Color.rgb(150, 125, 70),
-                22
-            )
-        );
-
-        LinearLayout.LayoutParams textParams =
-            new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-            );
-
-        textParams.setMargins(8, 12, 8, 18);
-        quranText.setLayoutParams(textParams);
-
-        content.addView(quranText);
-
-        TextView ornament = title(
-            "❖  ❖  ❖",
-            14
-        );
-        ornament.setTextColor(
-            Color.rgb(180, 150, 85)
-        );
-        ornament.setGravity(Gravity.CENTER);
-        content.addView(ornament);
-
-        Button previous = btn("◀ الصفحة السابقة");
-        Button next = btn("الصفحة التالية ▶");
-        Button first = btn("🏠 بداية السورة");
-
-        LinearLayout navigation =
-            new LinearLayout(this);
-
-        navigation.setOrientation(
-            LinearLayout.HORIZONTAL
-        );
-        navigation.setGravity(Gravity.CENTER);
-
-        LinearLayout.LayoutParams navParams =
-            new LinearLayout.LayoutParams(
-                0,
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                1
-            );
-
-        navigation.addView(
-            previous,
-            new LinearLayout.LayoutParams(
-                0,
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                1
-            )
-        );
-
-        navigation.addView(
-            next,
-            new LinearLayout.LayoutParams(
-                0,
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                1
-            )
-        );
-
-        content.addView(navigation);
-        content.addView(first);
-
-        Runnable updatePage = new Runnable() {
+        Runnable showPage = new Runnable() {
             @Override
             public void run() {
-                int page = currentPageNumber[0];
 
-                int from = page * versesPerPage;
-                int to = Math.min(
-                    from + versesPerPage,
-                    totalVerseCount
-                );
+                int number =
+                    currentPageNumber[0];
 
-                StringBuilder pageText =
+                StringBuilder text =
                     new StringBuilder();
 
-                boolean showBasmala =
-                    selectedSurahNumber != 9;
+                if (number == 0 &&
+                    selectedSurahNumber != 9) {
 
-                if (showBasmala) {
-                    String firstVerse =
-                        verses.get(0);
-
-                    if (!firstVerse.startsWith(
-                        "بسم الله الرحمن الرحيم"
-                    )) {
-                        pageText.append(
-                            "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ"
-                        );
-                        pageText.append("\n\n");
-                    }
-                }
-
-                for (int i = from; i < to; i++) {
-                    pageText.append(
-                        verses.get(i)
+                    text.append(
+                        "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ"
                     );
 
-                    pageText.append("  ﴿");
-                    pageText.append(
-                        verseNumbers.get(i)
-                    );
-                    pageText.append("﴾");
-
-                    if (i < to - 1) {
-                        pageText.append("  ");
-                    }
+                    text.append("\n\n");
                 }
 
-                quranText.setText(
-                    pageText.toString()
+                text.append(
+                    pages.get(number)
                 );
 
-                pageLabel.setText(
-                    "صفحة قراءة " +
-                    (page + 1) +
-                    " من " +
+                page.setText(
+                    text.toString()
+                );
+
+                pageNumber.setText(
+                    "سورة " +
+                    name +
+                    "  •  " +
+                    (number + 1) +
+                    " / " +
                     totalPages
                 );
 
-                previous.setEnabled(page > 0);
-                next.setEnabled(
-                    page < totalPages - 1
-                );
-
-                quranText.post(
+                page.post(
                     new Runnable() {
                         @Override
                         public void run() {
-                            quranText.scrollTo(0, 0);
+                            page.scrollTo(0, 0);
                         }
                     }
                 );
             }
         };
 
-        previous.setOnClickListener(v -> {
-            if (currentPageNumber[0] > 0) {
-                currentPageNumber[0]--;
-                updatePage.run();
+        final float[] downX = {0};
+        final float[] downY = {0};
+
+        page.setOnTouchListener(
+            new View.OnTouchListener() {
+
+                @Override
+                public boolean onTouch(
+                    View v,
+                    android.view.MotionEvent event
+                ) {
+
+                    if (event.getAction() ==
+                        android.view.MotionEvent.ACTION_DOWN) {
+
+                        downX[0] = event.getX();
+                        downY[0] = event.getY();
+
+                        return true;
+                    }
+
+                    if (event.getAction() ==
+                        android.view.MotionEvent.ACTION_UP) {
+
+                        float dx =
+                            event.getX() - downX[0];
+
+                        float dy =
+                            event.getY() - downY[0];
+
+                        if (Math.abs(dx) > 80 &&
+                            Math.abs(dx) > Math.abs(dy)) {
+
+                            if (dx < 0 &&
+                                currentPageNumber[0]
+                                    < totalPages - 1) {
+
+                                currentPageNumber[0]++;
+                                showPage.run();
+
+                            } else if (
+                                dx > 0 &&
+                                currentPageNumber[0] > 0
+                            ) {
+
+                                currentPageNumber[0]--;
+                                showPage.run();
+                            }
+
+                            return true;
+                        }
+
+                        return true;
+                    }
+
+                    return true;
+                }
             }
-        });
-
-        next.setOnClickListener(v -> {
-            if (currentPageNumber[0] < totalPages - 1) {
-                currentPageNumber[0]++;
-                updatePage.run();
-            }
-        });
-
-        first.setOnClickListener(v -> {
-            currentPageNumber[0] = 0;
-            updatePage.run();
-        });
-
-        updatePage.run();
-
-        resultInfo.setText(
-            "عدد الآيات: " + totalVerseCount
         );
+
+        Button favorite =
+            btn("🔖 حفظ السورة");
+
+        favorite.setOnClickListener(v -> {
+
+            android.content.SharedPreferences pref =
+                getSharedPreferences(
+                    "noor_favorites",
+                    MODE_PRIVATE
+                );
+
+            pref.edit()
+                .putBoolean(
+                    "surah_" + name,
+                    true
+                )
+                .apply();
+
+            android.widget.Toast.makeText(
+                this,
+                "⭐ تمت إضافة سورة " +
+                    name +
+                    " إلى المفضلة",
+                android.widget.Toast.LENGTH_SHORT
+            ).show();
+        });
+
+        content.addView(favorite);
+
+        EditText search = new EditText(this);
+
+        search.setHint("🔎 بحث داخل السورة");
+        search.setTextSize(15);
+        search.setSingleLine(true);
+        search.setGravity(
+            Gravity.RIGHT |
+            Gravity.CENTER_VERTICAL
+        );
+        search.setTextDirection(
+            View.TEXT_DIRECTION_RTL
+        );
+        search.setTextColor(Color.DKGRAY);
+        search.setHintTextColor(Color.GRAY);
+        search.setPadding(18, 10, 18, 10);
+
+        search.setBackground(
+            cardBackground(
+                Color.WHITE,
+                gold,
+                14
+            )
+        );
+
+        content.addView(search);
+
+        TextView resultInfo =
+            title("", 13);
+
+        resultInfo.setGravity(Gravity.RIGHT);
+        resultInfo.setTextDirection(
+            View.TEXT_DIRECTION_RTL
+        );
+        resultInfo.setTextColor(Color.GRAY);
+
+        content.addView(resultInfo);
 
         search.addTextChangedListener(
             new android.text.TextWatcher() {
@@ -1416,16 +1413,15 @@ LinearLayout root, content;
                     int before,
                     int count
                 ) {
+
                     String query =
                         s.toString().trim();
 
                     if (query.length() == 0) {
-                        updatePage.run();
 
-                        resultInfo.setText(
-                            "عدد الآيات: " +
-                            totalVerseCount
-                        );
+                        resultInfo.setText("");
+
+                        showPage.run();
 
                         return;
                     }
@@ -1446,32 +1442,38 @@ LinearLayout root, content;
                                 verses.get(i)
                             );
 
-                            result.append("  ﴿");
+                            result.append(
+                                "  ﴿"
+                            );
+
                             result.append(
                                 verseNumbers.get(i)
                             );
-                            result.append("﴾\n\n");
+
+                            result.append(
+                                "﴾\n\n"
+                            );
 
                             found++;
                         }
                     }
 
                     if (found == 0) {
-                        quranText.setText(
+
+                        page.setText(
                             "لا توجد نتائج داخل هذه السورة."
                         );
+
                     } else {
-                        quranText.setText(
+
+                        page.setText(
                             result.toString()
                         );
                     }
 
-                    pageLabel.setText(
-                        "نتائج البحث"
-                    );
-
                     resultInfo.setText(
-                        "نتائج البحث: " + found
+                        "نتائج البحث: " +
+                        found
                     );
                 }
 
@@ -1480,6 +1482,8 @@ LinearLayout root, content;
                 ) {}
             }
         );
+
+        showPage.run();
     }
 
     void showDailyDua() {
