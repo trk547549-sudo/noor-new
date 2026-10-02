@@ -1077,8 +1077,8 @@ LinearLayout root, content;
 
         base("سورة " + name);
 
-        TextView heading = title("✦ سورة " + name + " ✦", 25);
-        heading.setTextColor(Color.rgb(235,205,120));
+        TextView heading = title("۞ سورة " + name + " ۞", 25);
+        heading.setTextColor(Color.rgb(235, 205, 120));
         heading.setGravity(Gravity.CENTER);
         heading.setTextDirection(View.TEXT_DIRECTION_RTL);
         content.addView(heading);
@@ -1129,40 +1129,11 @@ LinearLayout root, content;
         resultInfo.setTextDirection(View.TEXT_DIRECTION_RTL);
         content.addView(resultInfo);
 
-        TextView quranText = new TextView(this);
+        final java.util.ArrayList<String> verses =
+            new java.util.ArrayList<>();
 
-        // إعداد عرض القرآن
-        quranText.setTextSize(23);
-        quranText.setTextColor(Color.rgb(245, 238, 220));
-        quranText.setGravity(
-            Gravity.RIGHT | Gravity.CENTER_VERTICAL
-        );
-        quranText.setTextDirection(View.TEXT_DIRECTION_RTL);
-        quranText.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_END);
-        quranText.setLineSpacing(18, 1.25f);
-        quranText.setPadding(22, 35, 22, 45);
-        quranText.setIncludeFontPadding(true);
-
-        // خلفية مريحة لقراءة القرآن
-        quranText.setBackground(
-            cardBackground(
-                Color.rgb(28, 38, 34),
-                Color.rgb(120, 105, 65),
-                20
-            )
-        );
-
-        LinearLayout.LayoutParams textParams =
-            new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-            );
-
-        textParams.setMargins(5, 18, 5, 25);
-        quranText.setLayoutParams(textParams);
-
-        StringBuilder surahText = new StringBuilder();
-        int totalVerses = 0;
+        final java.util.ArrayList<Integer> verseNumbers =
+            new java.util.ArrayList<>();
 
         try {
             InputStream in =
@@ -1179,7 +1150,6 @@ LinearLayout root, content;
             String line;
 
             while ((line = reader.readLine()) != null) {
-
                 line = line.trim();
 
                 if (line.length() == 0)
@@ -1196,72 +1166,238 @@ LinearLayout root, content;
 
                 try {
                     fileSurah =
-                        Integer.parseInt(
-                            parts[0].trim()
-                        );
+                        Integer.parseInt(parts[0].trim());
 
                     fileVerse =
-                        Integer.parseInt(
-                            parts[1].trim()
-                        );
+                        Integer.parseInt(parts[1].trim());
 
                 } catch (Exception ignored) {
                     continue;
                 }
 
-                String verseText =
-                    parts[2].trim();
-
                 if (fileSurah == surahNumber) {
-
-                    if (totalVerses > 0) {
-                        surahText.append("  ");
-                    }
-
-                    surahText.append(verseText);
-                    surahText.append("  ﴿");
-                    surahText.append(fileVerse);
-                    surahText.append("﴾");
-
-                    totalVerses++;
+                    verses.add(parts[2].trim());
+                    verseNumbers.add(fileVerse);
                 }
             }
 
             reader.close();
 
         } catch (Exception e) {
-
-            surahText.setLength(0);
-
-            surahText.append(
+            resultInfo.setText(
                 "تعذر قراءة آيات هذه السورة."
             );
         }
 
-        final String completeSurah =
-            surahText.toString();
+        final int totalVerseCount = verses.size();
 
-        final int totalVerseCount =
-            totalVerses;
-
-        if (completeSurah.trim().length() == 0) {
-
-            quranText.setText(
-                "لم يتم العثور على آيات هذه السورة في ملف القرآن."
+        if (totalVerseCount == 0) {
+            TextView error = title(
+                "لم يتم العثور على آيات هذه السورة في ملف القرآن.",
+                18
             );
-
-        } else {
-
-            quranText.setText(
-                completeSurah
-            );
+            error.setTextColor(Color.LTGRAY);
+            error.setGravity(Gravity.CENTER);
+            error.setTextDirection(View.TEXT_DIRECTION_RTL);
+            content.addView(error);
+            return;
         }
+
+        final int versesPerPage = 8;
+        final int totalPages =
+            (totalVerseCount + versesPerPage - 1)
+            / versesPerPage;
+
+        final int[] currentPageNumber = {0};
+
+        TextView pageLabel = title("", 15);
+        pageLabel.setTextColor(Color.rgb(235, 205, 120));
+        pageLabel.setGravity(Gravity.CENTER);
+        pageLabel.setTextDirection(View.TEXT_DIRECTION_RTL);
+        content.addView(pageLabel);
+
+        TextView quranText = new TextView(this);
+
+        quranText.setTextSize(23);
+        quranText.setTextColor(Color.rgb(55, 45, 30));
+        quranText.setGravity(
+            Gravity.RIGHT | Gravity.CENTER_VERTICAL
+        );
+        quranText.setTextDirection(View.TEXT_DIRECTION_RTL);
+        quranText.setTextAlignment(
+            View.TEXT_ALIGNMENT_VIEW_END
+        );
+        quranText.setLineSpacing(16, 1.22f);
+        quranText.setIncludeFontPadding(true);
+        quranText.setPadding(24, 45, 24, 45);
+
+        quranText.setBackground(
+            cardBackground(
+                Color.rgb(250, 246, 232),
+                Color.rgb(150, 125, 70),
+                22
+            )
+        );
+
+        LinearLayout.LayoutParams textParams =
+            new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            );
+
+        textParams.setMargins(8, 12, 8, 18);
+        quranText.setLayoutParams(textParams);
+
+        content.addView(quranText);
+
+        TextView ornament = title(
+            "❖  ❖  ❖",
+            14
+        );
+        ornament.setTextColor(
+            Color.rgb(180, 150, 85)
+        );
+        ornament.setGravity(Gravity.CENTER);
+        content.addView(ornament);
+
+        Button previous = btn("◀ الصفحة السابقة");
+        Button next = btn("الصفحة التالية ▶");
+        Button first = btn("🏠 بداية السورة");
+
+        LinearLayout navigation =
+            new LinearLayout(this);
+
+        navigation.setOrientation(
+            LinearLayout.HORIZONTAL
+        );
+        navigation.setGravity(Gravity.CENTER);
+
+        LinearLayout.LayoutParams navParams =
+            new LinearLayout.LayoutParams(
+                0,
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                1
+            );
+
+        navigation.addView(
+            previous,
+            new LinearLayout.LayoutParams(
+                0,
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                1
+            )
+        );
+
+        navigation.addView(
+            next,
+            new LinearLayout.LayoutParams(
+                0,
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                1
+            )
+        );
+
+        content.addView(navigation);
+        content.addView(first);
+
+        Runnable updatePage = new Runnable() {
+            @Override
+            public void run() {
+                int page = currentPageNumber[0];
+
+                int from = page * versesPerPage;
+                int to = Math.min(
+                    from + versesPerPage,
+                    totalVerseCount
+                );
+
+                StringBuilder pageText =
+                    new StringBuilder();
+
+                boolean showBasmala =
+                    surahNumber != 9;
+
+                if (showBasmala) {
+                    String firstVerse =
+                        verses.get(0);
+
+                    if (!firstVerse.startsWith(
+                        "بسم الله الرحمن الرحيم"
+                    )) {
+                        pageText.append(
+                            "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ"
+                        );
+                        pageText.append("\n\n");
+                    }
+                }
+
+                for (int i = from; i < to; i++) {
+                    pageText.append(
+                        verses.get(i)
+                    );
+
+                    pageText.append("  ﴿");
+                    pageText.append(
+                        verseNumbers.get(i)
+                    );
+                    pageText.append("﴾");
+
+                    if (i < to - 1) {
+                        pageText.append("  ");
+                    }
+                }
+
+                quranText.setText(
+                    pageText.toString()
+                );
+
+                pageLabel.setText(
+                    "صفحة قراءة " +
+                    (page + 1) +
+                    " من " +
+                    totalPages
+                );
+
+                previous.setEnabled(page > 0);
+                next.setEnabled(
+                    page < totalPages - 1
+                );
+
+                quranText.post(
+                    new Runnable() {
+                        @Override
+                        public void run() {
+                            quranText.scrollTo(0, 0);
+                        }
+                    }
+                );
+            }
+        };
+
+        previous.setOnClickListener(v -> {
+            if (currentPageNumber[0] > 0) {
+                currentPageNumber[0]--;
+                updatePage.run();
+            }
+        });
+
+        next.setOnClickListener(v -> {
+            if (currentPageNumber[0] < totalPages - 1) {
+                currentPageNumber[0]++;
+                updatePage.run();
+            }
+        });
+
+        first.setOnClickListener(v -> {
+            currentPageNumber[0] = 0;
+            updatePage.run();
+        });
+
+        updatePage.run();
 
         resultInfo.setText(
             "عدد الآيات: " + totalVerseCount
         );
-
-        content.addView(quranText);
 
         search.addTextChangedListener(
             new android.text.TextWatcher() {
@@ -1279,15 +1415,11 @@ LinearLayout root, content;
                     int before,
                     int count
                 ) {
-
                     String query =
                         s.toString().trim();
 
                     if (query.length() == 0) {
-
-                        quranText.setText(
-                            completeSurah
-                        );
+                        updatePage.run();
 
                         resultInfo.setText(
                             "عدد الآيات: " +
@@ -1300,39 +1432,42 @@ LinearLayout root, content;
                     StringBuilder result =
                         new StringBuilder();
 
-                    String[] verses =
-                        completeSurah.split("﴾");
-
                     int found = 0;
 
-                    for (String verse : verses) {
+                    for (int i = 0;
+                         i < verses.size();
+                         i++) {
 
-                        if (verse.contains(query)) {
+                        if (verses.get(i)
+                            .contains(query)) {
 
                             result.append(
-                                verse
+                                verses.get(i)
                             );
 
+                            result.append("  ﴿");
                             result.append(
-                                "﴾  "
+                                verseNumbers.get(i)
                             );
+                            result.append("﴾\n\n");
 
                             found++;
                         }
                     }
 
                     if (found == 0) {
-
                         quranText.setText(
                             "لا توجد نتائج داخل هذه السورة."
                         );
-
                     } else {
-
                         quranText.setText(
                             result.toString()
                         );
                     }
+
+                    pageLabel.setText(
+                        "نتائج البحث"
+                    );
 
                     resultInfo.setText(
                         "نتائج البحث: " + found
