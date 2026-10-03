@@ -1073,7 +1073,7 @@ LinearLayout root, content;
 
         int surahNumber = -1;
 
-        for (String[] s : surahs) {
+        for (String s : surahs) {
             if (s[0].equals(name)) {
                 surahNumber = Integer.parseInt(s[1]);
                 break;
