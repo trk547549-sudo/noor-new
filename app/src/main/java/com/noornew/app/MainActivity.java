@@ -1146,7 +1146,7 @@ LinearLayout root, content;
         final java.util.ArrayList<String> pages =
                 new java.util.ArrayList<>();
 
-        final int charsPerPage = 1150;
+        final int charsPerPage = 1750;
 
         StringBuilder currentText = new StringBuilder();
 
