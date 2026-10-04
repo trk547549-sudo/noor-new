@@ -1146,7 +1146,7 @@ LinearLayout root, content;
         final java.util.ArrayList<String> pages =
                 new java.util.ArrayList<>();
 
-        final int charsPerPage = 690;
+        final int charsPerPage = 1150;
 
         StringBuilder currentText = new StringBuilder();
 
@@ -1439,6 +1439,16 @@ LinearLayout root, content;
                 page.setText(
                         pages.get(index)
                 );
+
+                if (selectedSurahNumber != 9 && index == 0) {
+                    basmala.setVisibility(
+                            android.view.View.VISIBLE
+                    );
+                } else {
+                    basmala.setVisibility(
+                            android.view.View.GONE
+                    );
+                }
 
                 pageNumber.setText(
                         "سورة "
