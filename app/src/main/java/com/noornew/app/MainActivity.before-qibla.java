@@ -3,16 +3,6 @@ package com.noornew.app;
 import android.app.*;
 import android.os.*;
 import android.content.Intent;
-import android.Manifest;
-import android.content.pm.PackageManager;
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
-import android.hardware.SensorManager;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
-import android.graphics.drawable.RotateDrawable;
 import android.graphics.Color;
 
 import android.graphics.Typeface;
@@ -32,13 +22,6 @@ LinearLayout root, content;
     int dark = Color.rgb(18,28,25);
     String currentPage = "home";
     private long lastBackPressTime = 0;
-    private SensorManager qiblaSensorManager;
-    private Sensor qiblaRotationSensor;
-    private ImageView qiblaArrow;
-    private TextView qiblaDirectionText;
-    private float qiblaBearing = 0f;
-    private float[] qiblaRotationMatrix = new float[9];
-    private float[] qiblaOrientation = new float[3];
 
     String[] surahs = {
         "الفاتحة","البقرة","آل عمران","النساء","المائدة","الأنعام","الأعراف",
@@ -260,8 +243,8 @@ LinearLayout root, content;
         addRow(prayer,adhan);
 
         Button qib = btn2("🕋 القبلة", "اعرف اتجاه القبلة");
-        qib.setOnClickListener(v -> showQibla());
-        content.addView(qib);
+        qib.setOnClickListener(v ->
+            Toast.makeText(this,"اتجاه القبلة قيد التطوير",Toast.LENGTH_SHORT).show());
 
 
         Button namesBtn = btn2("✨ أسماء الله الحسنى", "تعرف على أسماء الله");
@@ -3064,199 +3047,6 @@ void showTasbeeh() {
 
         } catch (Exception ignored) {
         }
-    }
-
-
-    // ===== قبلة نور الهدى =====
-    void showQibla() {
-        currentPage = "qibla";
-        base("🕋 اتجاه القبلة");
-
-        TextView info = new TextView(this);
-        info.setText("حرّك الهاتف ببطء حتى يشير السهم نحو القبلة 🕋");
-        info.setTextSize(18);
-        info.setGravity(Gravity.CENTER);
-        info.setPadding(20,30,20,20);
-        content.addView(info);
-
-        qiblaDirectionText = new TextView(this);
-        qiblaDirectionText.setText("جارٍ تحديد اتجاه القبلة...");
-        qiblaDirectionText.setTextSize(20);
-        qiblaDirectionText.setGravity(Gravity.CENTER);
-        qiblaDirectionText.setPadding(10,20,10,20);
-        content.addView(qiblaDirectionText);
-
-        qiblaArrow = new ImageView(this);
-        qiblaArrow.setImageResource(android.R.drawable.ic_menu_compass);
-        qiblaArrow.setAdjustViewBounds(true);
-        qiblaArrow.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
-        LinearLayout.LayoutParams arrowParams =
-                new LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.MATCH_PARENT, 420);
-        arrowParams.setMargins(20,30,20,20);
-        content.addView(qiblaArrow, arrowParams);
-
-        Button refresh = btn2("📍 تحديث الموقع", "إعادة حساب اتجاه القبلة");
-        refresh.setOnClickListener(v -> startQiblaLocation());
-        content.addView(refresh);
-
-        startQiblaLocation();
-    }
-
-    void startQiblaLocation() {
-        if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED &&
-            checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-
-            requestPermissions(new String[]{
-                    Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.ACCESS_COARSE_LOCATION
-            }, 9001);
-            return;
-        }
-
-        LocationManager lm =
-                (LocationManager)getSystemService(LOCATION_SERVICE);
-
-        Location last = null;
-
-        try {
-            if (lm.isProviderEnabled(LocationManager.GPS_PROVIDER))
-                last = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-
-            if (last == null &&
-                lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER))
-                last = lm.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-        } catch (Exception ignored) {}
-
-        if (last != null) {
-            calculateQibla(last.getLatitude(), last.getLongitude());
-        } else {
-            qiblaDirectionText.setText(
-                    "لم يتم الحصول على موقع الهاتف بعد.\nفعّل الموقع ثم اضغط «تحديث الموقع».");
-        }
-
-        startQiblaSensor();
-    }
-
-    void calculateQibla(double latitude, double longitude) {
-        // إحداثيات الكعبة المشرفة
-        double kaabaLat = Math.toRadians(21.422487);
-        double kaabaLon = Math.toRadians(39.826206);
-
-        double userLat = Math.toRadians(latitude);
-        double userLon = Math.toRadians(longitude);
-
-        double dLon = kaabaLon - userLon;
-
-        double y = Math.sin(dLon);
-        double x = Math.cos(userLat) * Math.tan(kaabaLat)
-                - Math.sin(userLat) * Math.cos(dLon);
-
-        double bearing = Math.toDegrees(Math.atan2(y, x));
-        bearing = (bearing + 360.0) % 360.0;
-
-        qiblaBearing = (float) bearing;
-
-        if (qiblaDirectionText != null) {
-            qiblaDirectionText.setText(
-                    "اتجاه القبلة: " + Math.round(qiblaBearing) + "°\n"
-                    + directionName(qiblaBearing));
-        }
-    }
-
-    String directionName(float degrees) {
-        String[] dirs = {
-                "شمال", "شمال شرقي", "شرق", "جنوب شرقي",
-                "جنوب", "جنوب غربي", "غرب", "شمال غربي"
-        };
-        int i = Math.round(degrees / 45f) % 8;
-        return dirs[i];
-    }
-
-    void startQiblaSensor() {
-        qiblaSensorManager =
-                (SensorManager)getSystemService(SENSOR_SERVICE);
-
-        if (qiblaSensorManager == null) return;
-
-        qiblaRotationSensor =
-                qiblaSensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
-
-        if (qiblaRotationSensor == null) {
-            if (qiblaDirectionText != null)
-                qiblaDirectionText.setText(
-                        "هذا الهاتف لا يوفر مستشعر الاتجاه المطلوب للقبلة.");
-            return;
-        }
-
-        qiblaSensorManager.registerListener(
-                qiblaSensorListener,
-                qiblaRotationSensor,
-                SensorManager.SENSOR_DELAY_UI
-        );
-    }
-
-    private final SensorEventListener qiblaSensorListener =
-            new SensorEventListener() {
-        @Override
-        public void onSensorChanged(SensorEvent event) {
-            if (event.sensor.getType() != Sensor.TYPE_ROTATION_VECTOR)
-                return;
-
-            SensorManager.getRotationMatrixFromVector(
-                    qiblaRotationMatrix, event.values);
-
-            SensorManager.getOrientation(
-                    qiblaRotationMatrix, qiblaOrientation);
-
-            float azimuth =
-                    (float)Math.toDegrees(qiblaOrientation[0]);
-
-            azimuth = (azimuth + 360f) % 360f;
-
-            float rotation = qiblaBearing - azimuth;
-
-            if (qiblaArrow != null)
-                qiblaArrow.setRotation(rotation);
-        }
-
-        @Override
-        public void onAccuracyChanged(Sensor sensor, int accuracy) {}
-    };
-
-    @Override
-    public void onRequestPermissionsResult(
-            int requestCode, String[] permissions, int[] grantResults) {
-        super.onRequestPermissionsResult(
-                requestCode, permissions, grantResults);
-
-        if (requestCode == 9001) {
-            if (grantResults.length > 0 &&
-                grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                startQiblaLocation();
-            } else if (qiblaDirectionText != null) {
-                qiblaDirectionText.setText(
-                        "يلزم السماح بالموقع لحساب اتجاه القبلة.");
-            }
-        }
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-
-        if (qiblaSensorManager != null)
-            qiblaSensorManager.unregisterListener(qiblaSensorListener);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        if ("qibla".equals(currentPage) && qiblaSensorManager != null)
-            startQiblaSensor();
     }
 
 }
