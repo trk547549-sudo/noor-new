@@ -202,6 +202,7 @@ LinearLayout root, content;
         currentPage = "home";
         base("🌙 نور الهدى");
 
+        // عنوان التطبيق
         TextView logo = title("☾  نــور الهدى  ☽", 31);
         logo.setTextColor(Color.WHITE);
         logo.setPadding(10,18,10,4);
@@ -212,16 +213,63 @@ LinearLayout root, content;
         sub.setPadding(10,0,10,14);
         content.addView(sub);
 
-        TextView welcome = title(
-            "السلام عليكم ورحمة الله وبركاته\n\n" +
-            "﴿ وَاذْكُر رَّبَّكَ إِذَا نَسِيتَ ﴾\n\n" +
-            "اجعل لسانك عامرًا بذكر الله",
-            18
+        // بطاقة رحلة النور
+        TextView journey = title(
+            "✨ رحــلــة الــنــور ✨\n\n" +
+            "اجعل يومك أقرب إلى الله\n" +
+            "خطوة صغيرة كل يوم تصنع أثرًا كبيرًا",
+            19
         );
-        welcome.setTextColor(Color.WHITE);
-        welcome.setPadding(20,18,20,18);
-        welcome.setBackground(cardBackground(Color.rgb(15,27,31), gold, 24));
-        content.addView(welcome);
+        journey.setTextColor(Color.WHITE);
+        journey.setGravity(Gravity.CENTER);
+        journey.setPadding(24,22,24,22);
+        journey.setBackground(cardBackground(Color.rgb(15,27,31), gold, 28));
+        content.addView(journey);
+
+        section("✦ رحلتك اليوم ✦");
+
+        Button continueQuran = btn2(
+            "📖  أكمل القرآن",
+            "واصل رحلتك مع كتاب الله"
+        );
+        continueQuran.setOnClickListener(v -> showQuran());
+
+        Button todayDhikr = btn2(
+            "📿  أذكار اليوم",
+            "ابدأ يومك بذكر الله"
+        );
+        todayDhikr.setOnClickListener(v -> showAdhkar());
+
+        addRow(continueQuran, todayDhikr);
+
+        Button todayDua = btn2(
+            "🤲  دعاء اليوم",
+            "دعاء يرافق يومك"
+        );
+        todayDua.setOnClickListener(v -> showDailyDua());
+
+        Button nextPrayer = btn2(
+            "🕌  الصلاة",
+            "مواقيت الصلاة والأذان"
+        );
+        nextPrayer.setOnClickListener(v -> showPrayer());
+
+        addRow(todayDua, nextPrayer);
+
+        // بطاقة الإنجاز اليومية
+        TextView progress = title(
+            "🌟 إنجاز اليوم\n\n" +
+            "📖 قرآن   •   📿 ذكر   •   🤲 دعاء   •   🕌 صلاة\n\n" +
+            "استمر في رحلتك، فكل خطوة لها أثر.",
+            16
+        );
+        progress.setTextColor(Color.WHITE);
+        progress.setGravity(Gravity.CENTER);
+        progress.setPadding(20,18,20,18);
+        progress.setBackground(
+            cardBackground(Color.rgb(24,39,43), gold, 22)
+        );
+        content.addView(progress);
 
         section("✦ الوصول السريع ✦");
 
@@ -240,14 +288,13 @@ LinearLayout root, content;
             "تعلم أمور دينك بطريقة سهلة"
         );
         islamic.setOnClickListener(v -> showIslamicTopics());
+        addRow(q,islamic);
 
         Button a = btn2("📿 الأذكار والأدعية", "راحة للقلب والروح");
         a.setOnClickListener(v -> showAdhkar());
-        addRow(q,islamic);
 
         Button tasbeeh = btn2("📿 المسبحة", "سبح - أذكار - عدد");
         tasbeeh.setOnClickListener(v -> showTasbeeh());
-
         addRow(a,tasbeeh);
 
         section("✦ خدمات نور الهدى ✦");
@@ -263,7 +310,6 @@ LinearLayout root, content;
         qib.setOnClickListener(v -> showQibla());
         content.addView(qib);
 
-
         Button namesBtn = btn2("✨ أسماء الله الحسنى", "تعرف على أسماء الله");
         namesBtn.setOnClickListener(v -> showNames());
 
@@ -278,7 +324,7 @@ LinearLayout root, content;
         hijri.setOnClickListener(v -> showHijriCalendar());
         addRow(prophets,hijri);
 
-        Button dailyDua = btn2("\uD83E\uDD32 الدعاء اليومي", "دعاء جديد كل يوم");
+        Button dailyDua = btn2("🤲 الدعاء اليومي", "دعاء جديد كل يوم");
         dailyDua.setOnClickListener(v -> showDailyDua());
         content.addView(dailyDua);
 
@@ -291,10 +337,10 @@ LinearLayout root, content;
         about.setOnClickListener(v -> {
             TextView info = new TextView(this);
             info.setText(
-                "تطبيق إسلامي شامل\\n\\n" +
-                "مطور التطبيق:\\n" +
-                "علاء العمراني\\n" +
-                "ala alamrany\\n\\n" +
+                "تطبيق إسلامي شامل\n\n" +
+                "مطور التطبيق:\n" +
+                "علاء العمراني\n" +
+                "ala alamrany\n\n" +
                 "📧 hamdalmrany833@gmail.com"
             );
             info.setTextSize(18);
