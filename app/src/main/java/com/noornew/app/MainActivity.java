@@ -232,13 +232,19 @@ LinearLayout root, content;
             "📖  أكمل القرآن",
             "واصل رحلتك مع كتاب الله"
         );
-        continueQuran.setOnClickListener(v -> showQuran());
+        continueQuran.setOnClickListener(v -> {
+            markTodayProgress("quran");
+            showQuran();
+        });
 
         Button todayDhikr = btn2(
             "📿  أذكار اليوم",
             "ابدأ يومك بذكر الله"
         );
-        todayDhikr.setOnClickListener(v -> showAdhkar());
+        todayDhikr.setOnClickListener(v -> {
+            markTodayProgress("dhikr");
+            showAdhkar();
+        });
 
         addRow(continueQuran, todayDhikr);
 
@@ -246,21 +252,41 @@ LinearLayout root, content;
             "🤲  دعاء اليوم",
             "دعاء يرافق يومك"
         );
-        todayDua.setOnClickListener(v -> showDailyDua());
+        todayDua.setOnClickListener(v -> {
+            markTodayProgress("dua");
+            showDailyDua();
+        });
 
         Button nextPrayer = btn2(
             "🕌  الصلاة",
             "مواقيت الصلاة والأذان"
         );
-        nextPrayer.setOnClickListener(v -> showPrayer());
+        nextPrayer.setOnClickListener(v -> {
+            markTodayProgress("prayer");
+            showPrayer();
+        });
 
         addRow(todayDua, nextPrayer);
 
         // بطاقة الإنجاز اليومية
+        int completedToday = 0;
+        if (isTodayProgressDone("quran")) completedToday++;
+        if (isTodayProgressDone("dhikr")) completedToday++;
+        if (isTodayProgressDone("dua")) completedToday++;
+        if (isTodayProgressDone("prayer")) completedToday++;
+
+        int progressPercent = completedToday * 25;
+
         TextView progress = title(
             "🌟 إنجاز اليوم\n\n" +
-            "📖 قرآن   •   📿 ذكر   •   🤲 دعاء   •   🕌 صلاة\n\n" +
-            "استمر في رحلتك، فكل خطوة لها أثر.",
+            "📖 القرآن     " + (isTodayProgressDone("quran") ? "✓" : "○") + "\n" +
+            "📿 الأذكار    " + (isTodayProgressDone("dhikr") ? "✓" : "○") + "\n" +
+            "🤲 الدعاء     " + (isTodayProgressDone("dua") ? "✓" : "○") + "\n" +
+            "🕌 الصلاة     " + (isTodayProgressDone("prayer") ? "✓" : "○") + "\n\n" +
+            "إنجازك اليوم: " + completedToday + " / 4   •   " + progressPercent + "%\n\n" +
+            (completedToday == 4
+                ? "🎉 ما شاء الله! أكملت رحلة اليوم."
+                : "استمر في رحلتك، فكل خطوة لها أثر."),
             16
         );
         progress.setTextColor(Color.WHITE);
@@ -337,10 +363,12 @@ LinearLayout root, content;
         about.setOnClickListener(v -> {
             TextView info = new TextView(this);
             info.setText(
-                "تطبيق إسلامي شامل\n\n" +
-                "مطور التطبيق:\n" +
+                "نور الهدى\n\n" +
+                "منشئ التطبيق والمطور:\n" +
                 "علاء العمراني\n" +
                 "ala alamrany\n\n" +
+                "مساعد المطور:\n" +
+                "صابر العمراني\n\n" +
                 "📧 hamdalmrany833@gmail.com"
             );
             info.setTextSize(18);
@@ -358,6 +386,28 @@ LinearLayout root, content;
         });
 
         addRow(settings,about);
+    }
+
+    void markTodayProgress(String item) {
+        String today = new java.text.SimpleDateFormat(
+            "yyyy-MM-dd",
+            java.util.Locale.US
+        ).format(new java.util.Date());
+
+        getSharedPreferences("noor_daily_progress", MODE_PRIVATE)
+            .edit()
+            .putBoolean(today + "_" + item, true)
+            .apply();
+    }
+
+    boolean isTodayProgressDone(String item) {
+        String today = new java.text.SimpleDateFormat(
+            "yyyy-MM-dd",
+            java.util.Locale.US
+        ).format(new java.util.Date());
+
+        return getSharedPreferences("noor_daily_progress", MODE_PRIVATE)
+            .getBoolean(today + "_" + item, false);
     }
 
     void showIslamicTopics() {
