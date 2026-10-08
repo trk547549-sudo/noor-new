@@ -202,73 +202,66 @@ LinearLayout root, content;
         currentPage = "home";
         base("🌙 نور الهدى");
 
-        // عنوان التطبيق
         TextView logo = title("☾  نــور الهدى  ☽", 31);
         logo.setTextColor(Color.WHITE);
         logo.setPadding(10,18,10,4);
         content.addView(logo);
 
-        TextView sub = title("رفيقك إلى الطمأنينة وذكر الله",17);
+        TextView sub = title(
+            "رفيقك إلى الطمأنينة وذكر الله",
+            17
+        );
         sub.setTextColor(Color.WHITE);
         sub.setPadding(10,0,10,14);
         content.addView(sub);
 
-        // بطاقة رحلة النور
-        TextView journey = title(
-            "✨ رحــلــة الــنــور ✨\n\n" +
-            "اجعل يومك أقرب إلى الله\n" +
-            "خطوة صغيرة كل يوم تصنع أثرًا كبيرًا",
-            19
+        TextView welcome = title(
+            "السلام عليكم ورحمة الله وبركاته\n\n" +
+            "﴿ وَاذْكُر رَّبَّكَ إِذَا نَسِيتَ ﴾\n\n" +
+            "اجعل يومك أقرب إلى الله",
+            18
         );
-        journey.setTextColor(Color.WHITE);
-        journey.setGravity(Gravity.CENTER);
-        journey.setPadding(24,22,24,22);
-        journey.setBackground(cardBackground(Color.rgb(15,27,31), gold, 28));
-        content.addView(journey);
+        welcome.setTextColor(Color.WHITE);
+        welcome.setPadding(20,18,20,18);
+        welcome.setBackground(
+            cardBackground(Color.rgb(15,27,31), gold, 24)
+        );
+        content.addView(welcome);
 
+        // رحلتك اليوم
         section("✦ رحلتك اليوم ✦");
 
-        Button continueQuran = btn2(
-            "📖  أكمل القرآن",
-            "واصل رحلتك مع كتاب الله"
+        Button quran = btn2(
+            "📖 القرآن الكريم",
+            "أكمل قراءتك من حيث توقفت"
         );
-        continueQuran.setOnClickListener(v -> {
+        quran.setOnClickListener(v -> {
             markTodayProgress("quran");
             showQuran();
         });
 
-        Button todayDhikr = btn2(
-            "📿  أذكار اليوم",
-            "ابدأ يومك بذكر الله"
+        Button adhkar = btn2(
+            "📿 الأذكار والأدعية",
+            "أذكارك وأدعيتك اليومية"
         );
-        todayDhikr.setOnClickListener(v -> {
+        adhkar.setOnClickListener(v -> {
             markTodayProgress("dhikr");
             showAdhkar();
         });
 
-        addRow(continueQuran, todayDhikr);
+        addRow(quran, adhkar);
 
-        Button todayDua = btn2(
-            "🤲  دعاء اليوم",
-            "دعاء يرافق يومك"
+        Button prayer = btn2(
+            "🕌 مواقيت الصلاة والأذان",
+            "صلاتك في وقتها مع تنبيه الأذان"
         );
-        todayDua.setOnClickListener(v -> {
-            markTodayProgress("dua");
-            showDailyDua();
-        });
-
-        Button nextPrayer = btn2(
-            "🕌  الصلاة",
-            "مواقيت الصلاة والأذان"
-        );
-        nextPrayer.setOnClickListener(v -> {
+        prayer.setOnClickListener(v -> {
             markTodayProgress("prayer");
             showPrayer();
         });
 
-        addRow(todayDua, nextPrayer);
+        content.addView(prayer);
 
-        // بطاقة الإنجاز اليومية
         int completedToday = 0;
         if (isTodayProgressDone("quran")) completedToday++;
         if (isTodayProgressDone("dhikr")) completedToday++;
@@ -279,16 +272,22 @@ LinearLayout root, content;
 
         TextView progress = title(
             "🌟 إنجاز اليوم\n\n" +
-            "📖 القرآن     " + (isTodayProgressDone("quran") ? "✓" : "○") + "\n" +
-            "📿 الأذكار    " + (isTodayProgressDone("dhikr") ? "✓" : "○") + "\n" +
-            "🤲 الدعاء     " + (isTodayProgressDone("dua") ? "✓" : "○") + "\n" +
-            "🕌 الصلاة     " + (isTodayProgressDone("prayer") ? "✓" : "○") + "\n\n" +
-            "إنجازك اليوم: " + completedToday + " / 4   •   " + progressPercent + "%\n\n" +
+            "📖 القرآن     " +
+            (isTodayProgressDone("quran") ? "✓" : "○") + "\n" +
+            "📿 الأذكار    " +
+            (isTodayProgressDone("dhikr") ? "✓" : "○") + "\n" +
+            "🤲 الدعاء     " +
+            (isTodayProgressDone("dua") ? "✓" : "○") + "\n" +
+            "🕌 الصلاة     " +
+            (isTodayProgressDone("prayer") ? "✓" : "○") + "\n\n" +
+            "إنجازك اليوم: " + completedToday + " / 4   •   " +
+            progressPercent + "%\n\n" +
             (completedToday == 4
                 ? "🎉 ما شاء الله! أكملت رحلة اليوم."
                 : "استمر في رحلتك، فكل خطوة لها أثر."),
             16
         );
+
         progress.setTextColor(Color.WHITE);
         progress.setGravity(Gravity.CENTER);
         progress.setPadding(20,18,20,18);
@@ -297,6 +296,7 @@ LinearLayout root, content;
         );
         content.addView(progress);
 
+        // الوصول السريع
         section("✦ الوصول السريع ✦");
 
         Button globalSearch = btn2(
@@ -306,60 +306,71 @@ LinearLayout root, content;
         globalSearch.setOnClickListener(v -> showGlobalSearch());
         content.addView(globalSearch);
 
-        Button q = btn2("📖 القرآن الكريم", "اقرأ واستمتع بالقرآن");
-        q.setOnClickListener(v -> showQuran());
-
         Button islamic = btn2(
             "📚 إسلاميات",
             "تعلم أمور دينك بطريقة سهلة"
         );
         islamic.setOnClickListener(v -> showIslamicTopics());
-        addRow(q,islamic);
 
-        Button a = btn2("📿 الأذكار والأدعية", "راحة للقلب والروح");
-        a.setOnClickListener(v -> showAdhkar());
-
-        Button tasbeeh = btn2("📿 المسبحة", "سبح - أذكار - عدد");
+        Button tasbeeh = btn2(
+            "📿 المسبحة",
+            "سبح - أذكار - عدد"
+        );
         tasbeeh.setOnClickListener(v -> showTasbeeh());
-        addRow(a,tasbeeh);
 
+        addRow(islamic, tasbeeh);
+
+        // خدمات نور الهدى
         section("✦ خدمات نور الهدى ✦");
 
-        Button prayer = btn2("🕌 مواقيت الصلاة", "مع تنبيه الأذان");
-        prayer.setOnClickListener(v -> showPrayer());
-
-        Button adhan = btn2("🔔 الأذان", "صلاتك في وقتها");
-        adhan.setOnClickListener(v -> showPrayer());
-        addRow(prayer,adhan);
-
-        Button qib = btn2("🕋 القبلة", "اعرف اتجاه القبلة");
+        Button qib = btn2(
+            "🕋 القبلة",
+            "اعرف اتجاه القبلة"
+        );
         qib.setOnClickListener(v -> showQibla());
         content.addView(qib);
 
-        Button namesBtn = btn2("✨ أسماء الله الحسنى", "تعرف على أسماء الله");
+        Button namesBtn = btn2(
+            "✨ أسماء الله الحسنى",
+            "تعرف على أسماء الله"
+        );
         namesBtn.setOnClickListener(v -> showNames());
 
-        Button hadith = btn2("📜 الأحاديث النبوية", "نور من السنة");
+        Button hadith = btn2(
+            "📜 الأحاديث النبوية",
+            "نور من السنة"
+        );
         hadith.setOnClickListener(v -> showHadith());
-        addRow(namesBtn,hadith);
 
-        Button prophets = btn2("📚 قصص الأنبياء", "عبر ودروس من حياتهم");
+        addRow(namesBtn, hadith);
+
+        Button prophets = btn2(
+            "📚 قصص الأنبياء",
+            "عبر ودروس من حياتهم"
+        );
         prophets.setOnClickListener(v -> showProphets());
 
-        Button hijri = btn2("📅 التاريخ الهجري", "اعرف تاريخك الهجري");
+        Button hijri = btn2(
+            "📅 التاريخ الهجري",
+            "اعرف تاريخك الهجري"
+        );
         hijri.setOnClickListener(v -> showHijriCalendar());
-        addRow(prophets,hijri);
 
-        Button dailyDua = btn2("🤲 الدعاء اليومي", "دعاء جديد كل يوم");
-        dailyDua.setOnClickListener(v -> showDailyDua());
-        content.addView(dailyDua);
+        addRow(prophets, hijri);
 
+        // التطبيق
         section("✦ التطبيق ✦");
 
-        Button settings = btn2("⚙️ الإعدادات", "تحكم في تجربتك");
+        Button settings = btn2(
+            "⚙️ الإعدادات",
+            "تحكم في تجربتك"
+        );
         settings.setOnClickListener(v -> showSettings());
 
-        Button about = btn2("ℹ️ حول التطبيق", "نور الهدى");
+        Button about = btn2(
+            "ℹ️ حول التطبيق",
+            "معلومات فريق تطوير نور الهدى"
+        );
         about.setOnClickListener(v -> {
             TextView info = new TextView(this);
             info.setText(
@@ -373,10 +384,14 @@ LinearLayout root, content;
             );
             info.setTextSize(18);
             info.setGravity(Gravity.CENTER);
-            info.setPadding(40, 20, 40, 20);
-            info.setAutoLinkMask(android.text.util.Linkify.EMAIL_ADDRESSES);
+            info.setPadding(40,20,40,20);
+            info.setAutoLinkMask(
+                android.text.util.Linkify.EMAIL_ADDRESSES
+            );
             info.setLinksClickable(true);
-            info.setMovementMethod(android.text.method.LinkMovementMethod.getInstance());
+            info.setMovementMethod(
+                android.text.method.LinkMovementMethod.getInstance()
+            );
 
             new AlertDialog.Builder(this)
                 .setTitle("🌙 نور الهدى")
@@ -385,7 +400,7 @@ LinearLayout root, content;
                 .show();
         });
 
-        addRow(settings,about);
+        addRow(settings, about);
     }
 
     void markTodayProgress(String item) {
