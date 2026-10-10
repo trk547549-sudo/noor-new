@@ -31,6 +31,7 @@ LinearLayout root, content;
     int gold = Color.rgb(205,165,70);
     int dark = Color.rgb(18,28,25);
     String currentPage = "home";
+    boolean isDarkMode = true;
     private long lastBackPressTime = 0;
     private SensorManager qiblaSensorManager;
     private Sensor qiblaRotationSensor;
@@ -78,6 +79,7 @@ LinearLayout root, content;
     @Override
     public void onCreate(Bundle b) {
         super.onCreate(b);
+        isDarkMode = getSharedPreferences("noor_settings", MODE_PRIVATE).getBoolean("dark_mode", true);
         showHome();
     }
 
@@ -140,7 +142,7 @@ LinearLayout root, content;
         if (currentPage.equals("home")) {
             root.setBackground(bg);
         } else {
-            root.setBackgroundColor(Color.WHITE);
+            root.setBackgroundColor(isDarkMode ? Color.rgb(18,28,25) : Color.rgb(248,246,239));
         }
 
         TextView header = title(head,24);
@@ -152,7 +154,7 @@ LinearLayout root, content;
         content.setOrientation(LinearLayout.VERTICAL);
 
         if (!currentPage.equals("home")) {
-            content.setBackgroundColor(Color.WHITE);
+            content.setBackgroundColor(isDarkMode ? Color.rgb(18,28,25) : Color.rgb(248,246,239));
         }
         content.setPadding(8,4,8,20);
 
@@ -845,13 +847,18 @@ LinearLayout root, content;
         info.setTextColor(Color.WHITE);
         content.addView(info);
 
-        TextView darkMode = new TextView(this);
-        darkMode.setText("🌙 الوضع الليلي\nالمظهر الداكن مفعل");
-        darkMode.setTextColor(Color.WHITE);
+        android.widget.Switch darkMode = new android.widget.Switch(this);
+        darkMode.setText("🌙 الوضع الداكن");
+        darkMode.setTextColor(isDarkMode ? Color.WHITE : Color.rgb(35,45,40));
         darkMode.setTextSize(18);
-        darkMode.setGravity(Gravity.RIGHT);
         darkMode.setPadding(20, 25, 20, 25);
-        darkMode.setBackground(cardBackground(Color.rgb(15,27,31), gold, 18));
+        darkMode.setChecked(isDarkMode);
+        darkMode.setOnCheckedChangeListener((buttonView, enabled) -> {
+            getSharedPreferences("noor_settings", MODE_PRIVATE)
+                .edit().putBoolean("dark_mode", enabled).apply();
+            isDarkMode = enabled;
+            showSettings();
+        });
         content.addView(darkMode);
 
         android.widget.Switch adhanSwitch =
