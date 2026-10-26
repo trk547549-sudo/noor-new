@@ -111,7 +111,7 @@ LinearLayout root, content;
         b.setPadding(10,14,10,14);
         b.setTypeface(Typeface.DEFAULT,Typeface.BOLD);
         if (currentPage.equals("home")) {
-            b.setBackground(cardBackground(Color.rgb(17,29,33),gold,22));
+            b.setBackground(cardBackground(Color.rgb(13,82,58),gold,22));
         } else {
             b.setBackground(cardBackground(Color.WHITE,gold,22));
         }
@@ -188,7 +188,7 @@ LinearLayout root, content;
 
         sp.setSpan(
             new android.text.style.ForegroundColorSpan(
-                android.graphics.Color.rgb(210,220,205)
+                android.graphics.Color.rgb(225,239,220)
             ),
             startSub, sp.length(),
             android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
@@ -226,7 +226,7 @@ LinearLayout root, content;
         welcome.setTextColor(Color.WHITE);
         welcome.setPadding(20,18,20,18);
         welcome.setBackground(
-            cardBackground(Color.rgb(15,27,31), gold, 24)
+            cardBackground(Color.rgb(10,65,45), gold, 24)
         );
         content.addView(welcome);
 
@@ -264,39 +264,6 @@ LinearLayout root, content;
 
         content.addView(prayer);
 
-        int completedToday = 0;
-        if (isTodayProgressDone("quran")) completedToday++;
-        if (isTodayProgressDone("dhikr")) completedToday++;
-        if (isTodayProgressDone("dua")) completedToday++;
-        if (isTodayProgressDone("prayer")) completedToday++;
-
-        int progressPercent = completedToday * 25;
-
-        TextView progress = title(
-            "🌟 إنجاز اليوم\n\n" +
-            "📖 القرآن     " +
-            (isTodayProgressDone("quran") ? "✓" : "○") + "\n" +
-            "📿 الأذكار    " +
-            (isTodayProgressDone("dhikr") ? "✓" : "○") + "\n" +
-            "🤲 الدعاء     " +
-            (isTodayProgressDone("dua") ? "✓" : "○") + "\n" +
-            "🕌 الصلاة     " +
-            (isTodayProgressDone("prayer") ? "✓" : "○") + "\n\n" +
-            "إنجازك اليوم: " + completedToday + " / 4   •   " +
-            progressPercent + "%\n\n" +
-            (completedToday == 4
-                ? "🎉 ما شاء الله! أكملت رحلة اليوم."
-                : "استمر في رحلتك، فكل خطوة لها أثر."),
-            16
-        );
-
-        progress.setTextColor(Color.WHITE);
-        progress.setGravity(Gravity.CENTER);
-        progress.setPadding(20,18,20,18);
-        progress.setBackground(
-            cardBackground(Color.rgb(24,39,43), gold, 22)
-        );
-        content.addView(progress);
 
         // الوصول السريع
         section("✦ الوصول السريع ✦");
